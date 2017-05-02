@@ -154,7 +154,7 @@
 		**/
 		function checkEmail(){
 			var email=document.getElementById("email").value;
-		
+			
 			
 			dwrUtil.checkEmail(email,callBackFunc);
 			function callBackFunc(result){
