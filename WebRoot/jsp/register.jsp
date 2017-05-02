@@ -160,20 +160,22 @@
 			function callBackFunc(result){
 				//如果满足要求，就要显示按钮
 				var labelEle= document.getElementById("emailCheck");//获取元素
-				var divEle=document.getElementById("emailDiv");
+				var divEle=document.getElementById("emailDiv");//label所在的div
 				var sendButton=document.getElementById("sendMailButton");//
+				divEle.style.display="block";
 				if(result == "0"){
 					//div 显示，label显示格式错误
+					sendButton.style.display="none";
 					labelEle.textContent="错误:邮箱格式错误";
 				}else if(result == "1"){
 					//div显示 label显示已经使用
+					sendButton.style.display="none";
 					labelEle.textContent="错误:邮箱已经被使用";
 					
 				}else if(result == "2"){
 					//显示发送邮件按钮
 					sendButton.style.display="block";
-					
-					
+					divEle.style.display="none";
 				}
 				
 				
@@ -355,7 +357,7 @@
 									邮箱：
 								</label>
 								<div class="inputOuter2" style="display:block">
-								<input type="text" id="email" name="user.email" onchange="checkEmail();"
+								<input type="text" id="email" name="user.email" onpropertychange="checkEmail();" oninput="checkEmail();"
 										maxlength="40" class="inputstyle2" />
 								<Button id="sendMailButton" style="display:none" onclick="">发送邮件</Button>
 								</div>

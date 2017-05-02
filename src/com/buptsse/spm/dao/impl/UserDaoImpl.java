@@ -164,7 +164,7 @@ public class UserDaoImpl extends BaseDAOImpl<User> implements IUserDao {
     @Override
     public boolean isEmailInUse(String email) {
         // TODO Auto-generated method stub
-        String hqlString="select count(*) where email = :parm";
+        String hqlString="select count(*) from User where email = :parm";
         Long numsLong=super.count_(hqlString, email);
         if(numsLong >=1) return true;
         

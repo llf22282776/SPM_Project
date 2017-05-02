@@ -151,6 +151,7 @@ public class DwrUtil {
 	 * 
 	 * **/
 	public String checkEmail(String email){
+	    System.out.println("检查email中："+" "+email);
 	    if(emailFormatCheck(email)== false){
 	      //如果格式不合格
 	        
