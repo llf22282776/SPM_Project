@@ -102,16 +102,42 @@
 		}
 		
 		function registerPassWordCheck(){
-			var password = document.getElementById("passwd");
-			var length = password.value.length;
-			var passwordMsg = document.getElementById("PasswordMsg");
-			if(length < 6 || length > 16){
-				passwordMsg.style.display = "block";
-			}else{
-				passwordMsg.style.display = "none";
+			//密码没有做混合检查,修改如下
+			var password = document.getElementById("passwd").value;//获得密码
+			
+			var passwordMsg = document.getElementById("PasswordMsg");//是个Div
+			var labElement=passwordMsg.getElementsByTagName("label")[0];//获得
+			dwrUtil.registerPwdCheck(password,callbackFuc);//检查密码
+			function callbackFuc(result){
+				passwordMsg.style.display="block";//显示出来，然后开始修改文字
+				if(result == "ok"){
+					//什么都不做,检查下密码强度吧
+					var lv=strengthTest(password);
+					switch(lv){
+						case 1:labElement.textContent="密码强度:弱";
+						case 2:labElement.textContent="密码强度:中";
+						case 3:labElement.textContent="密码强度:强";
+					
+					}
+				}else {
+					labElement.textContent=result;//直接显示出来
+				}
 			}
 		}
-		
+		function strengthTest(val){
+			 	
+			    var lv = 0;
+			    var patt1=new RegExp("[0-9]+");
+			    var patt2=new RegExp("[A-Z]+");
+			    var patt3=new RegExp("[a-z]+");
+			    if(patt1.test(val) == true) lv++;
+			    if(patt2.test(val) == true) lv++;
+			    if(patt3.test(val) == true) lv++;
+			    
+				return lv;
+				
+			
+		}
 		function registerPassWordCheck2(){
 			var password1 = document.getElementById("passwd").value;
 			var password2 = document.getElementById("passwd2").value;
@@ -128,21 +154,36 @@
 		**/
 		function checkEmail(){
 			var email=document.getElementById("email").value;
-			var result=dwrUtil.checkEmail(email);//查询
-			var labelEle= document.getElementById("emailCheck");//获取元素
-			var divEle=document.getElementById("emailDiv");
+		
 			
-			if(result == "0"){
-				//div 显示，label显示格式错误
-				
-			}else if(result == "1"){
-				//div显示 label显示已经使用
-				
-			}else if(result == "2"){
-				//显示发送邮件按钮
+			dwrUtil.checkEmail(email,callBackFunc);
+			function callBackFunc(result){
+				//如果满足要求，就要显示按钮
+				var labelEle= document.getElementById("emailCheck");//获取元素
+				var divEle=document.getElementById("emailDiv");
+				var sendButton=document.getElementById("sendMailButton");//
+				if(result == "0"){
+					//div 显示，label显示格式错误
+					labelEle.textContent="错误:邮箱格式错误";
+				}else if(result == "1"){
+					//div显示 label显示已经使用
+					labelEle.textContent="错误:邮箱已经被使用";
+					
+				}else if(result == "2"){
+					//显示发送邮件按钮
+					sendButton.style.display="block";
+					
+					
+				}
 				
 				
 			}
+			
+			
+		}
+		function buttonClick(){
+			//点击sendMail，定时任务触发，就在这个函数里面写一个就好
+			
 			
 		}
 		function sendEmail(){
@@ -314,9 +355,9 @@
 									邮箱：
 								</label>
 								<div class="inputOuter2" style="display:block">
-								<input type="text" id="email" name="user.email" onchange=""
+								<input type="text" id="email" name="user.email" onchange="checkEmail();"
 										maxlength="40" class="inputstyle2" />
-								<Button id="sendMailButton" style="display:none" onclick=""></span>
+								<Button id="sendMailButton" style="display:none" onclick="">发送邮件</Button>
 								</div>
 
 								<br>

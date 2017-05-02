@@ -21,8 +21,8 @@ public class DwrUtil {
 
 	@Resource
 	private IUserService userService;
-	private String check = "^([a-z0-9A-Z]+[-|\\.]?)+[a-z0-9A-Z]@([a-z0-9A-Z]+(-[a-z0-9A-Z]+)?\\.)+[a-zA-Z]{2,}$";    
-	private Pattern emailRegex = Pattern.compile(check);  
+	private static final String check = "^([a-z0-9A-Z]+[-|\\.]?)+[a-z0-9A-Z]@([a-z0-9A-Z]+(-[a-z0-9A-Z]+)?\\.)+[a-zA-Z]{2,}$";    
+	private Pattern emailRegex = Pattern.compile(DwrUtil.check);  
 	/**
 	 * 
 	 * @param userName 用户名
@@ -69,6 +69,29 @@ public class DwrUtil {
 		
 		return "1";
 	}
+	
+	/**
+	 * by llf
+	 * 用户注册密码检查
+	 * 
+	 * */
+	public String  registerPwdCheck(String pwd) {
+	    System.out.println("正在检查密码是否合格"+" "+pwd);
+	    Pattern pattern = Pattern.compile("^(?=.*[a-zA-Z])(?=.*[0-9])[a-zA-Z0-9]{6,16}$");
+        Matcher isNumOrLets = pattern.matcher(pwd);
+        if( pwd.length()>= 6 && pwd.length() <= 16){
+            if(isNumOrLets.matches()){
+                //位数符合要求的前提下，满足字母和数字的混合搭配
+                return "ok";//返回ok
+            }else {
+                return "密码必须是数字和字母的组合";
+            }
+        }else{
+            return "密码必须是6位以上，16位以下"; //密码不满足要求
+        }
+        
+    }
+	
 	
 	/**
 	 * 
@@ -139,7 +162,6 @@ public class DwrUtil {
 	        
 	    }else {
 	        //可以使用
-	        
 	        return "2";
 	    }
 	    
