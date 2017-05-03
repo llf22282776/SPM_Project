@@ -232,7 +232,7 @@
 
 		} else {
 			
-			sendButton.value = timeTick;//显示剩余时间
+			sendButton.value = +timeTick+"秒后可再发送";//显示剩余时间
 			sendButton.setAttribute("class", "btn btn-warning");//样式改变
 			sendButton.setAttribute("disabled", true);//不可用
 			timeTick--;
