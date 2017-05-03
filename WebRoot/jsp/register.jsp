@@ -203,17 +203,15 @@
 				timeTick = 60;
 				swal("提示", "邮件发送成功", "success");
 				setTimeout("timeOutFunc()", 1000);
-				vaildTextEle.setAttribute("disabled", "true");//可用
-				vaildTextEle.disabled="true";
+				vaildTextEle.removeAttribute("disabled");//可用
 				vaildTextEle.style.backgroundColor = "#ffffff";//背景色改变
 			
 				spanEle.style.display = "inline";//显示
 				spanEle.setAttribute("class", "");
 			} else {
 				swal("错误", "邮件发送失败", "warning");
-				vaildTextEle.setAttribute("disabled", "false");//不可用
+				vaildTextEle.setAttribute("disabled", true);//不可用
 				vaildTextEle.style.backgroundColor = "#cccccc";//背景色改变
-				
 				spanEle.style.display = "none";//隐藏
 				spanEle.setAttribute("class", "");
 
@@ -230,13 +228,13 @@
 
 			sendButton.value = "发送邮件";
 			sendButton.setAttribute("class", "btn btn-success");//样式改变
-			sendButton.setAttribute("disabled", true);//可用
+			sendButton.removeAttribute("disabled");//可用
 
 		} else {
-			sendButton.setAttribute("disabled", true);//可用
+			
 			sendButton.value = timeTick;//显示剩余时间
 			sendButton.setAttribute("class", "btn btn-warning");//样式改变
-			sendButton.setAttribute("disabled", false);//不可用
+			sendButton.setAttribute("disabled", true);//不可用
 			timeTick--;
 			setTimeout("timeOutFunc()", 1000);//再次计时
 		}
