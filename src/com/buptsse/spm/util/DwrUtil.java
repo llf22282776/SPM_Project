@@ -82,7 +82,7 @@ public class DwrUtil {
             properties.put("mail.smtp.timeout", ""+timeout);//超时时间设置
             jemailImpl.setJavaMailProperties(properties);
             jemailImpl.send(mailMessage);
-            session.setAttribute("vaildNum", randomNum);//把数字放进来
+            session.setAttribute("vaildNum", randomNum+"");//把数字字符串放进来
             
             
         } catch (Exception e) {
@@ -99,7 +99,7 @@ public class DwrUtil {
      * */
     public String checkVaildText(String validText){
         HttpSession session = WebContextFactory.get().getSession();
-        String textString=(String)session.getAttribute("vaildNum");//取出验证码 
+        String textString=session.getAttribute("vaildNum")+"";//取出验证码 
         return textString.equals(validText)?"ok":"error";//验证成功返回ok
         
     }

@@ -32,8 +32,16 @@ public class RedirectionFilter implements Filter{
       HttpSession session=request.getSession();
       String rootUrlString="/SPM_Project";
       System.out.println(">>>>>>>>>>URI>>>>>>>>>:"+request.getRequestURI());
-       if( (session.getAttribute("user") == null) && (request.getRequestURI().endsWith("/loginAction.do") == false)  && (request.getRequestURI().endsWith("/LogOut.do")==false ) ){
-           //没有登录
+       if( (session.getAttribute("user") == null) && 
+               (request.getRequestURI().endsWith("/loginAction.do") == false)  
+               && 
+               (request.getRequestURI().endsWith("/LogOut.do")==false ) 
+               &&
+               (request.getRequestURI().endsWith("/registerAction.do")==false ) 
+               
+               
+               ){
+           //不是登陆，登出，注册
            System.out.println("正在重定向!!!");
            System.out.println((request.getRequestURI().endsWith("/loginAction.do")));
            System.out.println((request.getRequestURI().endsWith("/LogOut.do")) );

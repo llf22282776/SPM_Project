@@ -17,6 +17,7 @@ public class User implements Serializable{
 	private String userId;
 	private int videoTime;
 	private String email="";
+	private String vaildNum="";
 	public String getEmail() {
         return email;
     }
@@ -80,5 +81,13 @@ public class User implements Serializable{
 	public String getUserId(){
 		return this.userId;
 	}
+
+    public String getVaildNum() {
+        return vaildNum;
+    }
+
+    public void setVaildNum(String vaildNum) {
+        this.vaildNum = vaildNum;
+    }
 
 }

@@ -17,37 +17,15 @@
 <title>"教育部-IBM精品课程建设项目”软件项目管理课程</title>
 <!-- 		插入外部样式表，使用DwrUtil -->
 <link rel="stylesheet" type="text/css" href="./css/sweetalert2.min.css" />
+
 <script type="text/javascript" src="./dwr/util.js"></script>
 <script type="text/javascript" src="./dwr/engine.js"></script>
 <script type="text/javascript" src="./dwr/interface/dwrUtil.js"></script>
-<script type="text/javascript" src="./js/jquery.js"></script>
 <script type="text/javascript" src="./js/bootstrap.js"></script>
 <script type="text/javascript" src="./js/sweetalert2.min.js"></script>
+<link rel="stylesheet" type="text/css" href="./css/bootstrap.css" />
 <script type="text/javascript">
-	function register() {
-		/*			var registerUserName = document.getElementById("user");
-		 var registerPassWord = document.getElementById("passwd");
-		 var registerPassWord1 = document.getElementById("passwd2");
-		 dwrUtil.registerCheck(registerUserName.value,registerPassWord.value,registerPassWord1.value,callback);
-		 function callback(result){
-		 if(result == "success"){
-		 //$.messager.alert("提示信息","注册成功！");
-		 $("#msg").html("注册成功！");
-		 }else{
-		 $("#msg").html("注册失败，请重新注册！");
-		 //$.messager.alert("注册失败，请重新注册！");
-		 }
-		 }*/
-
-		$('#registFm').form('submit', {
-			url : "${ctx}/registerAction.do",
-			success : function(result) {
-				$("#msgRegist").html(result);
-				$('#registFm').form('clear');
-			}
-		});
-
-	}
+	var regState=false;
 
 	function login() {
 		var loginUserName = document.getElementById("u");
@@ -82,6 +60,62 @@
 				document.getElementById('UserNameMsg').style.display = "block";
 			}
 		}
+	}
+	function register() {
+		var formButton = document.getElementById("registerFormButton");
+		formButton.setAttribute("disabled",true);
+		$('#registFm').form('submit', {
+			url : "${ctx}/registerAction.do",
+			success : function(result) {
+				//这里应该处理返回的数据
+				if(result == "ok"){
+					//注册成功
+					formButton.removeAttribute("disabled");//可用
+					swal("提示", "注册成功", "success");
+					regState=true;//重新的注册的状态
+					$('#registFm').form('clear');
+					//其他的清理工作
+					clearRegState("ok");
+					
+				}else{
+					//注册失败
+					formButton.removeAttribute("disabled");//可用
+					swal("提示", "注册失败", "warning");
+					regState=true;//重新注册的状态
+					$('#registFm').form('clear');
+					//其他的清理工作
+					clearRegState("error");
+				}
+				
+				 
+
+			
+			}
+		});
+	
+
+	}
+	function clearRegState(type){
+		//清理注册的各种状态
+		regState=false;
+		if(type == "ok"){
+			 //成功,清空各种按钮的值
+			var passwordMsg1 = document.getElementById("PasswordMsg1");
+			var passwordMsg = document.getElementById("PasswordMsg"); 
+			passwordMsg1.style.display = "none";//密码验证藏起来
+			passwordMsg.style.display="none";//密码强度什么的藏起来
+			document.getElementById('RegisterNameMsg').style.display = "none";//账号的也藏起来
+			document.getElementById('emailDiv').style.display = "none";//邮件的也藏起来
+			document.getElementById('vaildTextDiv').style.display = "none";//验证的也藏起来
+			
+		}else {
+			//失败,就不做了？其他的以后再说
+			
+			
+			
+			
+		}
+		
 	}
 
 	function registerExtenceCheck() {
@@ -128,6 +162,7 @@
 			}
 		}
 	}
+	
 	function strengthTest(val) {
 
 		var lv = 0;
@@ -193,10 +228,13 @@
 		//失败，则编辑框，显示邮件发送失败
 		var email = document.getElementById("email").value;
 		var vaildTextEle = document.getElementById("vaildText");
-	
+		var sendButton = document.getElementById("sendMailButton");//
 		dwrUtil.sendEmail(email, callBckFuc);
-
+		sendButton.setAttribute("disabled", true);//不可用
+		
+		sendButton.value = "请稍后";//
 		function callBckFuc(result) {
+			
 			var spanEle = (vaildTextEle.parentNode).getElementsByTagName("span")[0];
 			if (result == "ok") {
 				//定时任务触发，倒计时开始，同时验证码输入框可以编辑,颜色改变
@@ -212,6 +250,8 @@
 				swal("错误", "邮件发送失败", "warning");
 				vaildTextEle.setAttribute("disabled", true);//不可用
 				vaildTextEle.style.backgroundColor = "#cccccc";//背景色改变
+				sendButton.removeAttribute("disabled");//可用
+				sendButton.value = "发送邮件";//
 				spanEle.style.display = "none";//隐藏
 				spanEle.setAttribute("class", "");
 
@@ -223,7 +263,7 @@
 	function timeOutFunc() {
 		//用来倒计时的
 		var sendButton = document.getElementById("sendMailButton");//
-		if (timeTick <= 0) {
+		if (timeTick <= 0 || regState == true) {
 			//不用再计时了,让按钮可视化，文字变成发送按钮
 
 			sendButton.value = "发送邮件";
@@ -243,12 +283,13 @@
 	function checkVaildText() {
 		//验证验证码是否正确，改变小图标，变成xxxxx,是验证码文字改变事件
 		var vaildText=document.getElementById("vaildText").value;//取验证码的值
-		dwrUtil.checkVaildText(vaildText,callBackFunc)
-	
-		spanEle.style.display = "none";//隐藏
+		dwrUtil.checkVaildText(vaildText,callBackFunc);
+		document.getElementById('vaildTextDiv').style.display = "block";//验证的div显示出来
+		var spanEle = document.getElementById("vaildSpan");
+		spanEle.style.display = "block";//显示
 		spanEle.setAttribute("class", "");
 		function callBackFunc(result){
-			var spanEle = (vaildTextEle.parentNode).getElementsByTagName("span")[0];
+			
 			if(result == "ok"){
 				//span变成对号的图标
 				spanEle.setAttribute("class","glyphicon glyphicon-ok");//对号
@@ -256,7 +297,7 @@
 				spanEle.style.color="#00cc00";//颜色绿色
 			}else {
 				//span变成错误号的图标
-				spanEle.setAttribute("class","glyphicon glyphicon-ok");//对号
+				spanEle.setAttribute("class","glyphicon glyphicon-remove");//对号
 				spanEle.style.fontSize="60px";
 				spanEle.style.color="#f24600";//颜色红色
 			}
@@ -420,9 +461,10 @@
 						</div>
 						<li><label class="input-tips2"> 验证码： </label>
 							<div class="inputOuter2" style="display: block">
-								<input disabled="false" style="backgroundColor: '#cccccc'"
+								<input disabled="false" style="backgroundColor: '#cccccc"
 									type="text" 
 									id="vaildText" 
+									name="user.vaildNum"
 									onpropertychange="checkVaildText();" 
 									oninput="checkVaildText();"
 									maxlength="16"
@@ -440,7 +482,9 @@
 								<!-- 									style="margin-top: 10px; margin-left: 85px;" -->
 								<!-- 									class="button_blue" value="同意协议并注册" onclick="register()" /> -->
 								<!-- 								</div> -->
-								<input type="button"
+								<input 
+								id="registerFormButton"
+								type="button"
 									style="margin-top: 10px; margin-left: 85px;"
 									class="button_blue" value="同意协议并注册" onclick="register();" />
 							</div>
