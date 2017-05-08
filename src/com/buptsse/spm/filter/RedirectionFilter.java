@@ -58,7 +58,20 @@ public class RedirectionFilter implements Filter{
            
        }else{ 
            //可能是 登陆登出 注册中的一个或者 user 不是null
-           if(session.getAttribute("user") != null)session.removeAttribute("common");//移除游客
+           if(session.getAttribute("user") != null){
+               session.removeAttribute("common");//移除游客}
+               //然后如果是
+               if(request.getRequestURI().endsWith("/loginAction.do")){
+                   //又想登陆了
+                   response.sendRedirect(rootUrlString+"/jsp/mainFrame.jsp");
+                   return;
+               }else if(request.getRequestURI().endsWith("/SPM_Project") || request.getRequestURI().endsWith("/SPM_Project/")){
+                   response.sendRedirect(rootUrlString+"/jsp/mainFrame.jsp");
+                   return;
+                   
+                   
+               }
+           }
            
            //进行接下来处理
            chain.doFilter(req, res);

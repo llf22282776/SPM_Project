@@ -45,6 +45,14 @@
 		<filter-name>redirection</filter-name>
 		<url-pattern>*.do</url-pattern>
 	</filter-mapping>
+	<filter-mapping>
+		<filter-name>redirection</filter-name>
+		<url-pattern>/SPM_Project/</url-pattern>
+	</filter-mapping>
+		<filter-mapping>
+		<filter-name>redirection</filter-name>
+		<url-pattern>/SPM_Project</url-pattern>
+	</filter-mapping>
   
   
   <filter>

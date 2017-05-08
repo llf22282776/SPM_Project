@@ -94,6 +94,29 @@ public class DwrUtil {
         
     }
     
+    /**
+     * 判断是不是有user
+     * 
+     * 
+     * 
+     * */
+    public String isUserHas(){
+        HttpSession session = WebContextFactory.get().getSession();
+        if(session.getAttribute("user") != null){
+            return "has";
+            
+            
+        }else {
+            return "doHas";
+        }
+        
+    }
+    
+    
+    /**
+     *游客登陆
+     * 
+     * */
     public String commonLogin(){
         HttpSession session = WebContextFactory.get().getSession();
         session.setAttribute("common", "somthing");//放个游客标志

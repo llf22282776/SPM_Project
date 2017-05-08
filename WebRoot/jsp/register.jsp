@@ -25,6 +25,19 @@
 <script type="text/javascript" src="./js/sweetalert2.min.js"></script>
 <link rel="stylesheet" type="text/css" href="./css/bootstrap.css" />
 <script type="text/javascript">
+window.onload=function(){
+	//看看是不是有人登陆过了
+	dwrUtil.isUserHas(callBack);
+		
+	function callBack(result){
+		if(result == "has"){
+			window.location.href="${ctx}/jsp/mainFrame.jsp";
+		}
+		
+	}	
+}
+</script>
+<script type="text/javascript">
 	var regState=false;
 
 	function login() {
