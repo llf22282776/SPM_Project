@@ -16,7 +16,7 @@
 		<title>"教育部-IBM精品课程建设项目”软件项目管理课程</title>
 	</head>
 	<frameset rows="22.8%,*,8.8%" border="0">
-		<frame src="${ctx}/jsp/top.jsp">
+		<frame id="top" src="${ctx}/jsp/top.jsp">
 		<frameset cols="22%,*" border="0">
 			<frame src="${ctx}/jsp/left.jsp">
 			<!-- <frame src="${ctx}/jsp/right.jsp" name="right"> -->

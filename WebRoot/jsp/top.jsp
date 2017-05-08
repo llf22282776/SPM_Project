@@ -175,6 +175,12 @@ body {
 				$(".out",	this).stop().animate({'top':	'0px'},		200); // move up - show
 				$(".over",	this).stop().animate({'top':	'-40px'},	200); // move up - hide
 			});
+			$("#logOut").click(function(){
+				//location.href="${pageContext.request.contextPath}/logOut.do"
+			
+				parent.window.location.href="${pageContext.request.contextPath}/logOut.do";
+				
+			});
 		});
 
 	</script>
@@ -229,7 +235,7 @@ body {
 					<a href="${pageContext.request.contextPath}/enterintro.do?name=lianxiwomen" target="right">联系我们</a>
 				</li>
 				<li>
-					<a href="${pageContext.request.contextPath}/logOut.do" target="123">登录入口</a>
+					<a id="logOut" target="123">登录入口</a>
 				</li>
 				
 				<c:if test="${session.user.position=='1'}">

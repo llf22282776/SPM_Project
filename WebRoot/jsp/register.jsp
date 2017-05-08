@@ -43,7 +43,15 @@
 			}
 		}
 	}
-
+	function commonLogin(){
+		//游客登陆
+		dwrUtil.commonLogin(callback);
+		function callback(result) {
+				//返回值暂时没有用
+				window.location.href="${ctx}/jsp/mainFrame.jsp";
+		}
+		
+	}
 	function loginExistenceCheck() {
 		var loginUserName = document.getElementById("u");
 		dwrUtil.extenceCheck(loginUserName.value, callback);
@@ -54,7 +62,7 @@
 				var msg = document.getElementById("labelUserNameMsg");
 				if (result == "unExtence") {
 					msg.innerHTML = "用户名不存在";
-				} else {
+				} else { 
 					msg.innerHTML = result;
 				}
 				document.getElementById('UserNameMsg').style.display = "block";
@@ -377,7 +385,7 @@
 									</td>
 									<td>
 										<div style="padding-left: 20px; margin-top: 20px;">
-											<input type="submit" formaction="${ctx}/jsp/mainFrame.jsp"
+											<input type="button" onclick="commonLogin();"
 												value="游客登陆" style="width: 120px;" class="button_blue" />
 										</div>
 									</td>

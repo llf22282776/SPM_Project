@@ -38,17 +38,29 @@ public class RedirectionFilter implements Filter{
                (request.getRequestURI().endsWith("/LogOut.do")==false ) 
                &&
                (request.getRequestURI().endsWith("/registerAction.do")==false ) 
-               
-               
+
                ){
-           //不是登陆，登出，注册
+           //不是登陆，登出，注册 且 没有user
+           //看看是不是个游客，是个游客也别重定向了
+           //妈的，搞毛线，在action里面做个毛线的权限控制
+           if(session.getAttribute("common")!=null ){
+               //有这个字段,分析分析有哪些能够重定向的，暂时先不做处理,也不冲定向
+               chain.doFilter(req, res);
+               return ;
+           }
+           
+           
            System.out.println("正在重定向!!!");
            System.out.println((request.getRequestURI().endsWith("/loginAction.do")));
-           System.out.println((request.getRequestURI().endsWith("/LogOut.do")) );
-           response.sendRedirect(rootUrlString+"/loginAction.do");
+           System.out.println((request.getRequestURI().endsWith("/logOut.do")) );
+           response.sendRedirect(rootUrlString);
            return;
            
-       }else{
+       }else{ 
+           //可能是 登陆登出 注册中的一个或者 user 不是null
+           if(session.getAttribute("user") != null)session.removeAttribute("common");//移除游客
+           
+           //进行接下来处理
            chain.doFilter(req, res);
           
        }

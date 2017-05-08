@@ -93,10 +93,18 @@ public class DwrUtil {
         return "ok";//发送成功
         
     }
+    
+    public String commonLogin(){
+        HttpSession session = WebContextFactory.get().getSession();
+        session.setAttribute("common", "somthing");//放个游客标志
+        return "ok";
+        
+    }
     /**
      * 验证码是否正确
      * 
      * */
+    
     public String checkVaildText(String validText){
         HttpSession session = WebContextFactory.get().getSession();
         String textString=session.getAttribute("vaildNum")+"";//取出验证码 

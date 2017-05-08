@@ -40,12 +40,13 @@ public class LoginAction extends ActionSupport
 		try
 		{
 			User tempuser = new User();
+			//这里有Bug,找到没找到呢？？？、
 			tempuser = userService.findUser(user.getUserName(),user.getPassword());
-			
+			System.out.println("Login:"+tempuser == null);
 			Map session = (Map) ActionContext.getContext().getSession();
 			session.put("user", tempuser);
 			return SUCCESS;			
-
+ 
 			
 		} catch(Exception e){
 			e.printStackTrace();
