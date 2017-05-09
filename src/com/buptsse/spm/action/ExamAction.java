@@ -9,14 +9,17 @@ import java.util.Map;
 import javax.annotation.Resource;
 
 import org.apache.struts2.ServletActionContext;
+import org.directwebremoting.WebContextFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+
 
 
 import com.alibaba.fastjson.JSONObject;
 import com.buptsse.spm.domain.Exam;
 import com.buptsse.spm.service.IExamService;
-
+import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
 
 
@@ -50,8 +53,12 @@ public class ExamAction extends ActionSupport{
 		examList = examService.findAllExam();
 		
 		Map paramMap = new HashMap();
-				
-		
+		//接下来判断
+		Map<String,Object> seMap= ActionContext.getContext().getSession();
+		if(seMap.get("user") == null){
+		    //没有登录
+		    return "error";
+		}
 		return "success";
 	}	
 	

@@ -187,7 +187,15 @@ body {
 	
 	
 	</head>
-	<div style="margin-left:90%;" ><h3>»¶Ó­Äú£º${session.user.userName }</h3></div>		
+	<c:choose>
+		<c:when test="${session.user == null}">
+			<div style="margin-left:90%;" ><h3>ÓÎ¿ÍµÇÂ½</h3></div>	
+		</c:when>
+		<c:otherwise>	
+			<div style="margin-left:90%;" ><h3>»¶Ó­Äú£º${session.user.userName }</h3></div>	
+		</c:otherwise>
+	</c:choose>
+		
 	<body margin="0" id="top">
 		<div id="menu2" class="menu" style="margin-left:30%;z-index: 99999" >
 			<ul>

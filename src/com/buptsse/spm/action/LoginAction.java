@@ -35,24 +35,36 @@ public class LoginAction extends ActionSupport
 	 */
 	public String login()
 	{
-		LOG.error("username:" + user.getUserName());
+		//if(user.getUserName()!=null)LOG.error("username:" + user.getUserName());
 		
 		try
-		{
+		{   Map session = (Map) ActionContext.getContext().getSession();
+		    if(session.get("user")!=null){
+		        //不允许重复登录
+		        System.out.println("login时，发现有user");
+		        return "twice";   
+		        
+		        
+		    }
 			User tempuser = new User();
-			//这里有Bug,找到没找到呢？？？、
+			//这里有Bug,找到没找到呢？？？、ok
+			if(user.getUserName() == null || user.getPassword() == null){
+			    //只要有一个等于null，就返回error
+			    return "error";
+			}
 			tempuser = userService.findUser(user.getUserName(),user.getPassword());
 			System.out.println("Login:"+tempuser == null);
-			Map session = (Map) ActionContext.getContext().getSession();
+			
 			session.put("user", tempuser);
 			return SUCCESS;			
  
 			
 		} catch(Exception e){
 			e.printStackTrace();
+			return "error";
 		}
-		LOG.error("开始保存数据");
-		return SUCCESS;
+
+
 	}
 	
 	public String logout()

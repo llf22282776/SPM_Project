@@ -17,7 +17,16 @@
 <title>"教育部-IBM精品课程建设项目”软件项目管理课程</title>
 <!-- 		插入外部样式表，使用DwrUtil -->
 <link rel="stylesheet" type="text/css" href="./css/sweetalert2.min.css" />
+<link>
+<style type="text/css">
+.web_login .input-tips2 {
+    padding-right: 5px;
+    width: 90px;!important
+    _width: 75px;
+    _font-size: 12px;
+}
 
+</style>
 <script type="text/javascript" src="./dwr/util.js"></script>
 <script type="text/javascript" src="./dwr/engine.js"></script>
 <script type="text/javascript" src="./dwr/interface/dwrUtil.js"></script>
@@ -25,17 +34,7 @@
 <script type="text/javascript" src="./js/sweetalert2.min.js"></script>
 <link rel="stylesheet" type="text/css" href="./css/bootstrap.css" />
 <script type="text/javascript">
-window.onload=function(){
-	//看看是不是有人登陆过了
-	dwrUtil.isUserHas(callBack);
-		
-	function callBack(result){
-		if(result == "has"){
-			window.location.href="${ctx}/jsp/mainFrame.jsp";
-		}
-		
-	}	
-}
+
 </script>
 <script type="text/javascript">
 	var regState=false;
@@ -446,7 +445,7 @@ window.onload=function(){
 							<label class="text" for="pm"> 密码必须为6位以上，16位以下！ </label>
 						</div>
 
-						<li><label class="input-tips2"> 确认密码： </label>
+						<li><label class="input-tips2" style="width:90px"> 确认密码： </label>
 							<div class="inputOuter2">
 								<input type="password" id="passwd2" name="user.password1"
 									onBlur="registerPassWordCheck2();" maxlength="16"

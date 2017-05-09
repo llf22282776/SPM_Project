@@ -10,7 +10,7 @@ var colsDefine = "";
 function switchAutoHide()
 {
 	autoHide = !autoHide;
-	document.getElementById('autoHideDiv').innerHTML = autoHide ? "Í£Ö¹×Ô¶¯Òþ²Ø" : "¼¤»î×Ô¶¯Òþ²Ø";
+	document.getElementById('autoHideDiv').innerHTML = autoHide ? "Í£Ö¹ï¿½Ô¶ï¿½ï¿½ï¿½ï¿½ï¿½" : "ï¿½ï¿½ï¿½ï¿½ï¿½Ô¶ï¿½ï¿½ï¿½ï¿½ï¿½";
 }
 
 function doMouseOver()
@@ -184,7 +184,7 @@ function submenu( isfav , favselect , group , group2 , yank )
 		document.getElementById(submenuname).style.display="";
 		//if (document.getElementById(submenuname + "_td").innerHTML.substr(0,5)=="<DIV>")
 		{
-			document.getElementById(submenuname + "_td").innerHTML="<div>ÔØÈëÖÐ¡­¡­</div>";
+			document.getElementById(submenuname + "_td").innerHTML="<div>ï¿½ï¿½ï¿½ï¿½ï¿½Ð¡ï¿½ï¿½ï¿½</div>";
 			window.frames["hiddenframe"].document.location.href = linkurl ;
 		}
 	}

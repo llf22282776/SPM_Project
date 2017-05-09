@@ -52,19 +52,19 @@
 						${downLoadList[status.index].statement}
 					<a class="color" href="${ctx}${downLoadList[status.index].filePath}"/>>点击下载</a>
 					
-					<c:if test="${session.user.position=='2' }">
+					<c:if test="${session.user.position eq '2' }">
 						<a class="color" href="deleteDownload.do?id=${downLoadList[status.index].id}">&nbsp;&nbsp;/&nbsp;&nbsp;删除</a>
 					</c:if>
 					
 					</p>
 				</s:iterator>
 				
-				<c:if test="${session.user.position=='2' }">
+				<c:if test="${session.user.position eq '2' }">
 					<input type="button" class="btn btn-default" style="margin-right:20px;" onclick="uploadFile()" value="文件上传" />
 		   		</c:if>				
 				
 				
-				<div id="dlg" class="easyui-dialog"  style="padding:10px 20px;width: 700px" closed="true" buttons="#dlg-buttons" >   
+				<div id="dlg" class="easyui-dialog"  style="display:block;padding:10px 20px;width: 700px" closed="true" buttons="#dlg-buttons" >   
 					<form id="fileUpload" method="post" action="" enctype="multipart/form-data">
 						<h2>
 							添加信息
