@@ -14,6 +14,9 @@
 <html>
 	<head>
 		<title>"教育部-IBM精品课程建设项目”软件项目管理课程</title>
+		<script type="text/javascript" src="${ctx}/js/j.js"></script>
+		<script type="text/javascript" src="${ctx}/js/bootstrap.js"></script>
+		<link rel="stylesheet" href="${ctx}/css/bootstrap.css" />
 	</head>
 	<frameset rows="22.8%,*,8.8%" border="0">
 		<frame id="top" src="${ctx}/jsp/top.jsp">

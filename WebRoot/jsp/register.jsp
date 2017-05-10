@@ -18,15 +18,9 @@
 <!-- 		插入外部样式表，使用DwrUtil -->
 <link rel="stylesheet" type="text/css" href="./css/sweetalert2.min.css" />
 <link>
-<style type="text/css">
-.web_login .input-tips2 {
-    padding-right: 5px;
-    width: 90px;!important
-    _width: 75px;
-    _font-size: 12px;
-}
 
-</style>
+
+
 <script type="text/javascript" src="./dwr/util.js"></script>
 <script type="text/javascript" src="./dwr/engine.js"></script>
 <script type="text/javascript" src="./dwr/interface/dwrUtil.js"></script>
@@ -445,7 +439,7 @@
 							<label class="text" for="pm"> 密码必须为6位以上，16位以下！ </label>
 						</div>
 
-						<li><label class="input-tips2" style="width:90px"> 确认密码： </label>
+						<li><label class="input-tips2"> 确认密码： </label>
 							<div class="inputOuter2">
 								<input type="password" id="passwd2" name="user.password1"
 									onBlur="registerPassWordCheck2();" maxlength="16"

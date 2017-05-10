@@ -5,24 +5,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<script type="text/javascript">
-	 function justLogin () {
-		//如果有父窗口，让父窗口进行这个工作
-		if (parent != null && parent != undefined)
-			parent.window.location.href = "${pageContext.request.contextPath}/login.do";
-		else
-			location.href = "${ctx}/login.do";
 
-	};
-	 function justLogout() {
-		//如果有父窗口，让父窗口进行这个工作
-		if (parent != null && parent != undefined)
-			parent.window.location.href = "${pageContext.request.contextPath}/logOut.do";
-		else
-			location.href = "${ctx}/logOut.do";
-
-	};
-</script>
 <title>失败提示信息</title>
 </head>
 <body>
@@ -59,6 +42,24 @@
 			</c:otherwise>
 		</c:choose>
 	</div>
+	<script type="text/javascript">
+	 function justLogin () {
+		//如果有父窗口，让父窗口进行这个工作
+		if (parent != null && parent != undefined)
+			parent.window.location.href = "${pageContext.request.contextPath}/login.do";
+		else
+			location.href = "${ctx}/login.do";
+
+	};
+	 function justLogout() {
+		//如果有父窗口，让父窗口进行这个工作
+		if (parent != null && parent != undefined)
+			parent.window.location.href = "${pageContext.request.contextPath}/logOut.do";
+		else
+			location.href = "${ctx}/logOut.do";
+
+	};
+</script>
 </body>
 
 </html>

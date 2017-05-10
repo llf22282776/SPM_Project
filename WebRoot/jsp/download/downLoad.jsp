@@ -59,7 +59,7 @@
 					</p>
 				</s:iterator>
 				
-				<c:if test="${session.user.position eq '2' }">
+				<c:if test="${session.user.position eq '1' }">
 					<input type="button" class="btn btn-default" style="margin-right:20px;" onclick="uploadFile()" value="文件上传" />
 		   		</c:if>				
 				
@@ -83,7 +83,7 @@
 							<input class="easyui-filebox"  id="file" name="file"  required="true"  buttonText="选择文件"  style="width:500px; height: 26px">
 						<br />
 						<hr/>
-						<input type="button"" class="btn btn-default" style="margin-right:20px;" onclick="upload()" value="上 传" />				
+						<input type="button" class="btn btn-default" style="margin-right:20px;" onclick="upload()" value="上 传" />				
 					</form>
 				</div>
 				<div id="dlg-buttons" align="center">

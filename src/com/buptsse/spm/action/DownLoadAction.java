@@ -8,17 +8,24 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.lang.ObjectUtils.Null;
 import org.apache.struts2.ServletActionContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
-import com.buptsse.spm.domain.DownLoad;
-import com.buptsse.spm.service.IDownLoadService;
 
+
+
+
+import com.buptsse.spm.domain.DownLoad;
+import com.buptsse.spm.domain.User;
+import com.buptsse.spm.service.IDownLoadService;
+import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
 
 
@@ -58,6 +65,10 @@ public class DownLoadAction extends ActionSupport{
 	 * @throws Exception
 	 */
 	public String findDownLoadList() throws Exception{
+	    if(ActionContext.getContext().getSession().get("user") == null)
+	        return "noLogin";
+	    
+	    
 		downLoadList = downLoadService.findAllDownLoad();
 		return "success";
 	}	
@@ -71,7 +82,17 @@ public class DownLoadAction extends ActionSupport{
 		
 		String msg = "";
 		try {
-			
+		    Map<String, Object> sessionMap=ActionContext.getContext().getSession();
+		    User thisuser = (User) sessionMap.get("user") ;
+			if(
+			        thisuser == null || 
+			        thisuser.getPosition().equals("3") || 
+			        thisuser.getPosition().equals("2") 
+			        
+			    ){
+			    return "noLogin";
+			    
+			}
 			InputStream in = new FileInputStream(file.get(0));
 			String dir = ServletActionContext.getRequest().getRealPath(
 					UPLOADDIR);

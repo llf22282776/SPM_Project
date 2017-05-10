@@ -178,12 +178,14 @@
 		<action name="listDownLoad" method="findDownLoadList" class="downLoadAction">
 			<result name="success">/jsp/download/downLoad.jsp</result>
 			<result name="error">error/error.jsp</result>
+			<result name="noLogin">error/authError.jsp</result>
 		</action>
 
 		<!-- 增加下载信息 -->
 		<action name="addDownload" method="insertDownLoad" class="downLoadAction">
 			<result name="success"></result>
 			<result name="error">error/error.jsp</result>
+			<result name="noLogin">error/authError.jsp</result>
 		</action>
 
 		<!-- 删除下载信息 -->
