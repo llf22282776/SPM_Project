@@ -2,6 +2,8 @@ package com.buptsse.spm.service;
 
 import java.util.List;
 
+import org.springframework.stereotype.Service;
+
 import com.buptsse.spm.domain.BasicInfo;
 import com.buptsse.spm.domain.BasicInfo;
 
@@ -13,6 +15,7 @@ import com.buptsse.spm.domain.BasicInfo;
  * @modify BUPT-TC 
  * @modifyDate
  */
+@Service
 public interface IBasicInfoService {
 	//public BasicInfo enterBasicinfo(String name);
 	public BasicInfo findBasicInfoById(String id);

@@ -78,6 +78,7 @@
 	function register() {
 		var formButton = document.getElementById("registerFormButton");
 		formButton.setAttribute("disabled",true);
+		
 		$('#registFm').form('submit', {
 			url : "${ctx}/registerAction.do",
 			success : function(result) {
