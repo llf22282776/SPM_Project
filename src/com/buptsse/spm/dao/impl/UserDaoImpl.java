@@ -79,6 +79,7 @@ public class UserDaoImpl extends BaseDAOImpl<User> implements IUserDao {
 		return null;
 	}
 
+
 	/* (non-Javadoc)
 	 * @see com.buptsse.spm.dao.IUserDao#insertUser(com.buptsse.spm.domain.User)
 	 */

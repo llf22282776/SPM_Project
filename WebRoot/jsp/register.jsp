@@ -142,7 +142,7 @@
 			} else {
 				var msg = document.getElementById("labelUserNameMsg1");
 				if (result == "extence") {
-					msg.innerHTML = "用户名已存在";
+					msg.innerHTML = "账号已存在";
 				} else {
 					msg.innerHTML = result;
 				}

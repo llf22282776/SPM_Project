@@ -48,11 +48,11 @@ public class LoginAction extends ActionSupport
 		    }
 			User tempuser = new User();
 			//这里有Bug,找到没找到呢？？？、ok
-			if(user.getUserName() == null || user.getPassword() == null){
+			if(user.getUserId() == null || user.getPassword() == null){
 			    //只要有一个等于null，就返回error
 			    return "error";
 			}
-			tempuser = userService.findUser(user.getUserName(),user.getPassword());
+			tempuser = userService.findUserById(user.getUserId(),user.getPassword());
 			System.out.println("Login:"+tempuser == null);
 			
 			session.put("user", tempuser);

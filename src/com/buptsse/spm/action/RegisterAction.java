@@ -79,18 +79,23 @@ public class RegisterAction extends ActionSupport {
         }
         if (StringUtils.isBlank(user.getUserName())
                 || StringUtils.isBlank(user.getPassword())) {
-            msg = "用户名或密码未输入,请输入用户名或密码！";
+            msg = "用户名或密码不能为空,请输入用户名或密码！";
         } else {
             LOG.error("开始保存数据");
             if (user.getPassword().equals(user.getPassword1())) {
-                user.setUserId(user.getUserName());
-                user.setId(user.getUserName());
-                user.setPosition("3");
-                user.setEmail(user.getEmail());
-                
-                userService.addUser(user);
-                msg = "ok";
-                LOG.error("保存数据");
+            	
+            	if(userService.findUserById(user.getUserId()) != null){
+            		msg = "用户账号已存在";
+            	}
+            	else{
+                    user.setId(user.getUserId());
+                    user.setPosition("3");
+                    
+                    userService.addUser(user);
+                    msg = "ok";
+                    LOG.error("保存数据");
+            	}
+
                 // ServletActionContext.getRequest().setAttribute("registerMsg",
                 // "注册成功！");
             } else {

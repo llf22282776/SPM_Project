@@ -112,81 +112,8 @@ public class BasicInfoAction extends ActionSupport {
 		return null;
 	}	
 	
-	
-/*
-	public String enterExerciseInfo() {
-		return content;
-//		BasicinfoDao exerciseDao = new BasicinfoDaoImpl();
-//		content = exerciseDao.findBasicinfo(name);
-//		char type = name.charAt(name.length() - 1);
-//		Map request = (Map) ActionContext.getContext().get("request");
-//		request.put("exerciseinfocontent", content);
-//		request.put("exerciseinfoname", name);
-//		request.put("exerciseinfotype", type);
-//		String content2 = changeFormat(content);
-//		request.put("exerciseinfocontentdisplay", content2);
-//		return "success";
-	}
 
-	public String renterExerciseInfo() {
-		return content;
-		// char type = name.charAt(name.length()-1);
-//		char type = name.charAt(8);
-//		BasicinfoDao exerciseDao = new BasicinfoDaoImpl();
-//		if (type == 'x') {
-//			name = "exercise0";
-//			// type = "0";
-//		}
-//		content = exerciseDao.findBasicinfo(name);
-//		System.out.println("11111");
-//		Map session = (Map) ActionContext.getContext().getSession();
-//		session.put("exerciseinfocontent", content);
-//		session.put("exerciseinfoname", name);
-//		session.put("exerciseinfotype", type);
-//		String content2 = changeFormat(content);
-//		System.out.print(content2);
-//		System.out.println("");
-//		session.put("exerciseinfocontentdisplay", content2);
-//		return "success" + type;
-	}
 
-	public void updatePicture(){
-//		try {
-//			// ȡ����ǰ̨����·��
-//			DateFormat format2 = new SimpleDateFormat("yyyyMMddHHmmss");
-//			String reTime = format2
-//					.format(new Date(System.currentTimeMillis()));
-//			InputStream is = new FileInputStream(upload.get(0));
-//			OutputStream os = new FileOutputStream(
-//					"C:\\Users\\Administrator\\Desktop\\�����ھ�����\\����\\SPM\\WebRoot\\pic\\"
-//							+ reTime + ".jpg");
-//			byte buffer[] = new byte[1024];
-//			int count = 0;
-//			while ((count = is.read(buffer)) > 0) {
-//				os.write(buffer, 0, count);
-//			}
-//			os.close();
-//			is.close();
-//			this.picturePath = "../pic/" + reTime + ".jpg";
-//		} catch (Exception e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-	}	
-	
-	public String updateBasicinfo() {
-//		BasicinfoDao infoDao = new BasicinfoDaoImpl();
-//		try{
-//			upload.get(0);
-//		}catch(Exception e){
-//			infoDao.modifyBasicinfo(this.name, this.content, this.picturePath);
-//			return "success";
-//		}
-//		updatePicture();
-//		infoDao.modifyBasicinfo(this.name, this.content, this.picturePath);
-		return "success";
-	}	
-	*/
 	public String changeFormat(String content) {
 		for (int i = 1; i < content.length();) {
 			String left = content.substring(0, i);
