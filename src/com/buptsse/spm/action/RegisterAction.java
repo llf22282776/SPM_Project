@@ -4,6 +4,7 @@
 package com.buptsse.spm.action;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,6 +25,7 @@ import com.buptsse.spm.domain.Course;
 import com.buptsse.spm.domain.User;
 import com.buptsse.spm.service.ICodeService;
 import com.buptsse.spm.service.IUserService;
+import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
 
 /**
@@ -78,19 +80,31 @@ public class RegisterAction extends ActionSupport {
             LOG.error("USER对象为空！");
         }
         if (StringUtils.isBlank(user.getUserName())
-                || StringUtils.isBlank(user.getPassword())) {
+        || StringUtils.isBlank(user.getPassword())
+        || StringUtils.isBlank(user.getUserId())
+        || StringUtils.isBlank(user.getEmail())
+     
+                ) {
             msg = "用户名或密码不能为空,请输入用户名或密码！";
         } else {
             LOG.error("开始保存数据");
             if (user.getPassword().equals(user.getPassword1())) {
             	
-            	if(userService.findUserById(user.getUserId()) != null){
+            	if(userService.findUserById(user.getUserId()) != null
+            	
+            	        ){
             		msg = "用户账号已存在";
+            	}else if(userService.isEmailInuse(user.getEmail())){
+            	    
+            	    msg = "邮箱已经使用";
             	}
+            	else if(userService.isEmailInuse(user.getEmail())){
+                    
+                    msg = "邮箱已经使用";
+                }
             	else{
                     user.setId(user.getUserId());
                     user.setPosition("3");
-                    
                     userService.addUser(user);
                     msg = "ok";
                     LOG.error("保存数据");
@@ -166,29 +180,57 @@ public class RegisterAction extends ActionSupport {
     public String deleteUser() {
 
         boolean result = false;
+        
+        @SuppressWarnings("rawtypes")
+        Map sessionMap=ActionContext.getContext().getSession();
+        User user=(User) sessionMap.get("user");
         String str = "";
         String[] ids = ServletActionContext.getRequest().getParameterValues(
-                "ids[]");
-
+                "ids[]");//可以传数组的
+        boolean[] booleanlist=new boolean[ids.length];
         for (int i = 0; i < ids.length; i++) {
             // 将已确认的删除
             try {
-                result = userService.deleteUser(ids[i]);
+                if(user!=null && user.getId().equals(ids[i])){
+                 result =false;
+                }
+                else result = userService.deleteUser(ids[i]);
             } catch (Exception e) {
                 // TODO: handle exception
                 e.printStackTrace();
                 result = false;
             }
-
-            if (result) {
-                str = "删除成功！";
-            } else {
-                str = "删除失败，请联系管理员！";
-            }
-
+            booleanlist[i]=result;
         }
-
-        String message = JSONObject.toJSONString(str);
+        String msg="";
+        boolean isAllTrue=true;//假设全部都能删除成功
+        List<Integer> list=new ArrayList<Integer>();
+        int index=0;
+        for(boolean b:booleanlist){
+            if(b == false){
+                 list.add(index);
+                 isAllTrue=false;
+             }
+                 index++;   
+        }
+        if(isAllTrue)msg="删除成功";
+        else if(list.size() < ids.length){
+            msg="部分删除成功,但用户id为:";
+            for(int k=0;k<list.size();k++){
+                msg+=ids[list.get(k)];
+                if(ids[list.get(k)].equals(user.getId()))msg+="(自己)";
+                if(k<list.size()-1)msg+=",";
+            }
+            msg+="删除失败";
+            
+        }else {
+            msg="删除全部失败"; 
+            
+        }
+        System.out.println(msg);
+        JSONObject jsonObject=new JSONObject();
+        jsonObject.put("msg", msg);
+        String message = jsonObject.toJSONString();
         try {
             ServletActionContext.getResponse().getWriter().write(message);
         } catch (IOException e) {

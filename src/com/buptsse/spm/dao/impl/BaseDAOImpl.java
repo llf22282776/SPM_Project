@@ -109,8 +109,8 @@ public class BaseDAOImpl<T> implements IBaseDAO<T> {
 			for (int i = 0; i < param.size(); i++) {
 				q.setParameter(i, param.get(i));
 			}
-		}
-		
+		} 
+		System.out.println("查询语句是:");
 		System.out.println("进入分页查询底层方法");
 		return q.setFirstResult((page - 1) * rows).setMaxResults(rows).list();
 	}

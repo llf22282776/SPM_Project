@@ -12,6 +12,7 @@ import com.buptsse.spm.domain.User;
 
 public interface IUserDao {
 	public User findUser(User user);
+	public User findUser_Id(User user);
 	public User findUserById(String id);
 	public boolean insertUser(User user);
 	public List<User> searchUser(List<Object> choose);

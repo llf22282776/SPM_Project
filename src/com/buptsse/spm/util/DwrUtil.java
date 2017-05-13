@@ -32,7 +32,9 @@ public class DwrUtil {
     @Resource
     private IUserService userService;
     private static final String check = "^([a-z0-9A-Z]+[-|\\.]?)+[a-z0-9A-Z]@([a-z0-9A-Z]+(-[a-z0-9A-Z]+)?\\.)+[a-zA-Z]{2,}$";
+    private static final String checkName="[`~!@#$%^&*()+=|{}':;',\\[\\].<>/?~！@#￥%……&*（）——+|{}【】‘；：”“’。，、？]";
     private Pattern emailRegex = Pattern.compile(DwrUtil.check);
+    private Pattern unamePattern = Pattern.compile(DwrUtil.checkName);
     private static final String MAILHOST = "smtp.163.com";
     private static final String PASSPORT = "llf22282776";
     private static final String PASSWD = "seeAISINI211";
@@ -62,78 +64,77 @@ public class DwrUtil {
      * */
 
     public String sendEmail(String email) {
-        int timeout=10000;
+        int timeout = 10000;
         try {
             JavaMailSenderImpl jemailImpl = new JavaMailSenderImpl();
             jemailImpl.setHost(DwrUtil.MAILHOST);
             jemailImpl.setUsername(PASSPORT);
             jemailImpl.setPassword(PASSWD);
-            MimeMessage mailMessage= jemailImpl.createMimeMessage();
-            MimeMessageHelper mHelper=new MimeMessageHelper(mailMessage);
+            MimeMessage mailMessage = jemailImpl.createMimeMessage();
+            MimeMessageHelper mHelper = new MimeMessageHelper(mailMessage);
             mHelper.setFrom("llf22282776@163.com");
             mHelper.setTo(email);
             mHelper.setSubject("SPM教务系统注册验证码");
-            int randomNum= ((int)((Math.random()*9+1)*10000));  
-           
+            int randomNum = ((int) ((Math.random() * 9 + 1) * 10000));
+
             HttpSession session = WebContextFactory.get().getSession();
-            mHelper.setText("您的验证码是:"+randomNum);
-            Properties properties=new Properties();
+            mHelper.setText("您的验证码是:" + randomNum);
+            Properties properties = new Properties();
             properties.put("mail.smtp.auth", "true");
-            properties.put("mail.smtp.timeout", ""+timeout);//超时时间设置
+            properties.put("mail.smtp.timeout", "" + timeout);// 超时时间设置
             jemailImpl.setJavaMailProperties(properties);
             jemailImpl.send(mailMessage);
-            session.setAttribute("vaildNum", randomNum+"");//把数字字符串放进来
-            
-            
+            session.setAttribute("vaildNum", randomNum + "");// 把数字字符串放进来
+
         } catch (Exception e) {
             // TODO: handle exception
             return "error";
         }
-        
-        return "ok";//发送成功
-        
+
+        return "ok";// 发送成功
+
     }
-    
+
     /**
      * 判断是不是有user
      * 
      * 
      * 
      * */
-    public String isUserHas(){
+    public String isUserHas() {
         HttpSession session = WebContextFactory.get().getSession();
-        if(session.getAttribute("user") != null){
+        if (session.getAttribute("user") != null) {
             return "has";
-            
-            
-        }else {
+
+        } else {
             return "doHas";
         }
-        
+
     }
-    
-    
+
     /**
-     *游客登陆
+     * 游客登陆
      * 
      * */
-    public String commonLogin(){
+    public String commonLogin() {
         HttpSession session = WebContextFactory.get().getSession();
-        session.setAttribute("common", "somthing");//放个游客标志
+        session.setAttribute("common", "somthing");// 放个游客标志
         return "ok";
-        
+
     }
+
     /**
      * 验证码是否正确
      * 
      * */
-    
-    public String checkVaildText(String validText){
+
+    public String checkVaildText(String validText) {
         HttpSession session = WebContextFactory.get().getSession();
-        String textString=session.getAttribute("vaildNum")+"";//取出验证码 
-        return textString.equals(validText)?"ok":"error";//验证成功返回ok
-        
+        String textString = session.getAttribute("vaildNum") + "";// 取出验证码
+        return textString.equals(validText) ? "ok" : "error";// 验证成功返回ok
+
     }
+
     /**
      * 
      * @param userName
@@ -154,7 +155,7 @@ public class DwrUtil {
             return "账号或密码未输入！";
         }
         try {
-            if (userService.findUser(userName, passwWord) == null) {
+            if (userService.findUserById(userName, passwWord) == null) {
                 // ServletActionContext.getRequest().setAttribute("loginMsg",
                 // "对不起，该用户不存在或密码输入错误！");
                 return "对不起，该用户不存在或密码输入错误！";
@@ -249,12 +250,34 @@ public class DwrUtil {
         }
         return "error";
     }
+    /**
+     * 
+     * 检查用户名格式
+     * 
+     * 
+     * */
+    public String checkUserNameFormat(String userName) {
+        //检查用户命名格式，不能有特殊字符
+        Matcher matcher = unamePattern.matcher(userName);
+        if( matcher.matches() == true)return "错误:用户名含有特殊字符 ";// 成功 true 失败 false
+        else {
+            if(userName.length()<1 || userName.length()> 10){
+                return "用户名必须在十个字符以内";
+            }else{
+                return "ok";
+            }
+            
+        }
+    }
 
-    /*
+    /**
+     * 
      * 检查邮箱，格式是否正确 是否已经使用
      * 
+     * 
      * *
-     */
+     **/
+
     public String checkEmail(String email) {
         System.out.println("检查email中：" + " " + email);
         if (emailFormatCheck(email) == false) {
@@ -271,7 +294,17 @@ public class DwrUtil {
         }
 
     }
-
+    /**
+     * 发言判断
+     * 
+     * */
+    public boolean checkMessageBlank(String s1,String s2,String s3){
+        return !(StringUtils.isBlank(s1) || StringUtils.isBlank(s2)||StringUtils.isBlank(s3));
+        
+        
+    }
+    
+    
     public boolean emailFormatCheck(String email) {
         // 检查邮箱格式
         Matcher matcher = emailRegex.matcher(email);

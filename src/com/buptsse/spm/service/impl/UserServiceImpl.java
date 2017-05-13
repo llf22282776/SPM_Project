@@ -8,10 +8,13 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import javax.annotation.Resource;
 import javax.transaction.Transactional;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import com.buptsse.spm.dao.IUserDao;
@@ -38,9 +41,9 @@ public class UserServiceImpl implements IUserService {
 	@Override
 	public User findUserById(String id) {
 		// TODO Auto-generated method stub
-		User user = new User();
-		user.setUserId(id);
-		user = iUserDao.findUser(user);
+		User user = null;
+	
+		user = iUserDao.findUserById(id);
 		return user;
 	}
 	
@@ -49,7 +52,7 @@ public class UserServiceImpl implements IUserService {
 		User user= new User();
 		user.setUserId(id);
 		user.setPassword(password);
-		user=iUserDao.findUser(user);
+		user=iUserDao.findUser_Id(user);
 		if(user==null || !user.getPassword().equals(password)){
 			return null;
 		}else{
@@ -130,21 +133,23 @@ public class UserServiceImpl implements IUserService {
 	}
 
 	@Override
-	public List findPage(Map param, Integer page, Integer rows) {
+	public List findPage(@SuppressWarnings("rawtypes") Map param, Integer page, Integer rows) {
 		// TODO Auto-generated method stub
 		String hql = "from User where 1=1 ";
 		List paramList = new ArrayList();
-		Iterator iter = param.keySet().iterator();
-		
-		while (iter.hasNext()){
-			String key = (String) iter.next();
-			String value = (String) param.get(key);
-			if(!"".equals(value)){
-				hql+="and "+key+"=? ";
-				paramList.add(value);				
-			}
-		}		
-		
+		Set<Entry<String, String>> set=param.entrySet();
+		for(Entry<String, String> entry:set){
+		    String key = (String) entry.getKey();
+            String value = (String) entry.getValue();
+            System.out.println("key:"+key+" "+"value:"+value);
+            if(!StringUtils.isBlank(value)){
+                //只要不是空
+                hql+="and "+key+"=? ";
+                paramList.add(value);               
+            }
+		}
+
+		System.out.println("hql:"+hql);
 		return iUserDao.findPage(hql,paramList, page, rows);		
 		
 	}

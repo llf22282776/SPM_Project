@@ -23,7 +23,7 @@
     $('#dataList')[0].style.display="";
     $('#dg').datagrid({
     url:"${ctx}/listUser.do",
-    queryParams:{userid:$('#userid').val(),
+    queryParams:{userid: $('#userid').val(),
     			userName:$('#userName').val(),
     			position:$('#position').combobox('getValue')} //传参
     });
@@ -58,7 +58,7 @@
 			$.getJSON("${ctx}/deleteUser.do",
 				{"ids[]":ids},
 				function(data){
-					$.messager.alert("提示信息",data);
+					$.messager.alert("提示信息",data.msg);
 					$('#dg').datagrid("reload");
 				});			
 	    }    
@@ -107,9 +107,9 @@
  <table style="background:#efefef; border-collapse:collapse ;"   width="100%" height="80" cellspacing="5" cellpadding="5"> 
  	<tr>
 	 	<td width="15%" align="right" ><label for="userid" >学号或工号:</label> </td>
-	 	<td width="15%"><input class="easyui-textbox" type="text" id="classId" /> </td>
+	 	<td width="15%"><input class="easyui-textbox" type="text" id="userid" /> </td>
 	 	<td width="15%" align="right"><label for="userName">用户名:</label> </td>
-	 	<td width="15%"><input class="easyui-textbox" type="text" id="studentId"  /></td>
+	 	<td width="15%"><input class="easyui-textbox" type="text" id="userName"  /></td>
 	 	<td width="15%" align="right"> <label for="position">身份:</label> </td>
     	<td width="25%">
     		<select class="easyui-combobox" type="text" id="position"  panelHeight="100" style="width:150px;" >

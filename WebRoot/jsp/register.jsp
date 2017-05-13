@@ -32,7 +32,7 @@
 </script>
 <script type="text/javascript">
 	var regState=false;
-
+	var timeHandle=null;
 	function login() {
 		var loginUserName = document.getElementById("u");
 		var loginPassWord = document.getElementById("p");
@@ -78,6 +78,24 @@
 	function register() {
 		var formButton = document.getElementById("registerFormButton");
 		formButton.setAttribute("disabled",true);
+		var idDiv=document.getElementById("RegisterNameMsg");
+		var unameDiv=document.getElementById("RegisterNameMsg1");
+		var pwdDiv=document.getElementById("PasswordMsg");
+		var pwd2Div=document.getElementById("PasswordMsg1");
+		var emailDiv=document.getElementById("emailDiv");
+		if(
+				idDiv.style.display  != "none" ||
+				unameDiv.style.display  != "none" ||
+				pwdDiv.style.display  != "none" ||
+				pwd2Div.style.display  != "none" ||
+				emailDiv.style.display  != "none" 
+		  ){
+			//有一个不是none
+			return ;//什么都不做了
+			
+		}
+		
+		
 		
 		$('#registFm').form('submit', {
 			url : "${ctx}/registerAction.do",
@@ -101,14 +119,8 @@
 					//其他的清理工作
 					clearRegState("error");
 				}
-				
-				 
-
-			
 			}
 		});
-	
-
 	}
 	function clearRegState(type){
 		//清理注册的各种状态
@@ -122,6 +134,10 @@
 			document.getElementById('RegisterNameMsg').style.display = "none";//账号的也藏起来
 			document.getElementById('emailDiv').style.display = "none";//邮件的也藏起来
 			document.getElementById('vaildTextDiv').style.display = "none";//验证的也藏起来
+			document.getElementById('sendMailButton').style.display = "none";//验证的也藏起来
+			document.getElementById('vaildText').setAttribute("disabled","true");//让验证码输入框不起作用
+			document.getElementById('vaildText').style.background="#cccccc";//变个颜色
+			window.clearTimeout(timeHandle);//清除定时器
 			
 		}else {
 			//失败,就不做了？其他的以后再说
@@ -161,17 +177,9 @@
 		function callbackFuc(result) {
 			passwordMsg.style.display = "block";//显示出来，然后开始修改文字
 			if (result == "ok") {
-				//什么都不做,检查下密码强度吧
-				var lv = strengthTest(password);
-				switch (lv) {
-				case 1:
-					labElement.textContent = "密码强度:弱";
-				case 2:
-					labElement.textContent = "密码强度:中";
-				case 3:
-					labElement.textContent = "密码强度:强";
-
-				}
+				//收起面板
+				passwordMsg.style.display = "none";
+				
 			} else {
 				labElement.textContent = result;//直接显示出来
 			}
@@ -231,7 +239,7 @@
 			} else if (result == "2") {
 				//显示发送邮件按钮
 				sendButton.style.display = "inline";
-				divEle.style.display = "none";
+				divEle.style.display = "none";//邮件信息的藏起来
 			}
 
 		}
@@ -255,16 +263,16 @@
 				//定时任务触发，倒计时开始，同时验证码输入框可以编辑,颜色改变
 				timeTick = 60;
 				swal("提示", "邮件发送成功", "success");
-				setTimeout("timeOutFunc()", 1000);
+				timeHandle= setTimeout("timeOutFunc()", 1000);
 				vaildTextEle.removeAttribute("disabled");//可用
-				vaildTextEle.style.backgroundColor = "#ffffff";//背景色改变
+				vaildTextEle.style.background = "#ffffff";//背景色改变
 			
 				spanEle.style.display = "inline";//显示
 				spanEle.setAttribute("class", "");
 			} else {
 				swal("错误", "邮件发送失败", "warning");
 				vaildTextEle.setAttribute("disabled", true);//不可用
-				vaildTextEle.style.backgroundColor = "#cccccc";//背景色改变
+				vaildTextEle.style.background = "#cccccc";//背景色改变
 				sendButton.removeAttribute("disabled");//可用
 				sendButton.value = "发送邮件";//
 				spanEle.style.display = "none";//隐藏
@@ -291,9 +299,26 @@
 			sendButton.setAttribute("class", "btn btn-warning");//样式改变
 			sendButton.setAttribute("disabled", true);//不可用
 			timeTick--;
-			setTimeout("timeOutFunc()", 1000);//再次计时
+			timeHandle= setTimeout("timeOutFunc()", 1000);//再次计时
 		}
 
+	}
+	function checkUserNameFormat(){
+		//检查用户名格式
+		var msgDiv=document.getElementById("RegisterNameMsg1");
+		var labDiv=document.getElementById("labelUserNameMsg2");
+		var nameValue=document.getElementById("user1").value;
+		dwrUtil.checkUserNameFormat(nameValue,callBack);
+		function callBack(result){
+			if(result == "ok"){
+				msgDiv.style.display="none";
+				labDiv.textContent="";
+			}else{
+				msgDiv.style.display="block";//显示
+				labDiv.textContent=result;
+			}
+			
+		}
 	}
 	function checkVaildText() {
 		//验证验证码是否正确，改变小图标，变成xxxxx,是验证码文字改变事件
@@ -355,7 +380,7 @@
 							<div class="uinArea" id="uinArea">
 								<label class="input-tips" for="u"> 帐号： </label>
 								<div class="inputOuter" id="uArea">
-									<input type="text" id="u" name="user.userName"
+									<input type="text" id="u" name="user.userId"
 										onBlur="loginExistenceCheck();" class="easyui-textbox"
 										data-options="iconCls:'icon-man'"
 										style="width: 200px; height: 38px;" />
@@ -366,7 +391,7 @@
 								style="display: none; color: #F00">
 								&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 								<label id="labelUserNameMsg" class="text" for="m">
-									用户名应为10位！ </label>
+									账号应为10位！ </label>
 							</div>
 
 							<div class="pwdArea" id="pwdArea">
@@ -414,9 +439,9 @@
 
 					<ul class="reg_form" id="reg-ul">
 
-						<li><label class="input-tips2"> 用户名： </label>
+						<li><label class="input-tips2"> 账号： </label>
 							<div class="inputOuter2">
-								<input type="text" id="user" maxlength="10" name="user.userName"
+								<input type="text" id="user" maxlength="10" name="user.userId"
 									onBlur="registerExtenceCheck();" class="inputstyle2" />
 							</div> <br> <br></li>
 
@@ -424,9 +449,19 @@
 							style="display: none; color: #F00">
 							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 							<label id="labelUserNameMsg1" class="text" for="m">
-								用户名应为10位！ </label>
+								账号应为10位！ </label>
 						</div>
+						<li><label class="input-tips2"> 用户名： </label>
+							<div class="inputOuter2">
+								<input type="text" id="user1" maxlength="10" name="user.userName"
+									onBlur="checkUserNameFormat();" class="inputstyle2" />
+							</div> <br> <br></li>
 
+						<div class="RegisterName" id="RegisterNameMsg1"
+							style="display: none; color: #F00">
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+							<label id="labelUserNameMsg2" class="text" for="m"></label>
+						</div>
 						<li><label class="input-tips2"> 密码： </label>
 							<div class="inputOuter2">
 								<input type="password" id="passwd" name="user.password"
@@ -476,7 +511,7 @@
 						</div>
 						<li><label class="input-tips2"> 验证码： </label>
 							<div class="inputOuter2" style="display: block">
-								<input disabled="false" style="backgroundColor: '#cccccc"
+								<input disabled="false" style="background: #cccccc"
 									type="text" 
 									id="vaildText" 
 									name="user.vaildNum"
