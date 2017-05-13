@@ -34,6 +34,29 @@ public class UserServiceImpl implements IUserService {
 	/* (non-Javadoc)
 	 * @see com.buptsse.spm.service.IUserService#findUser(java.lang.String, java.lang.String)
 	 */
+	
+	@Override
+	public User findUserById(String id) {
+		// TODO Auto-generated method stub
+		User user = new User();
+		user.setUserId(id);
+		user = iUserDao.findUser(user);
+		return user;
+	}
+	
+	@Override
+	public User findUserById(String id, String password){
+		User user= new User();
+		user.setUserId(id);
+		user.setPassword(password);
+		user=iUserDao.findUser(user);
+		if(user==null || !user.getPassword().equals(password)){
+			return null;
+		}else{
+			return user;
+		}
+	}
+	
 	@Override
 	public User findUser(String userName, String password) {
 		// TODO Auto-generated method stub
@@ -152,7 +175,9 @@ public class UserServiceImpl implements IUserService {
         
         
         return iUserDao.isEmailInUse(email);
-    }	
+    }
+
+	
 	
 	
 	

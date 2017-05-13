@@ -198,21 +198,21 @@ public class DwrUtil {
      *            用户名
      * @return String 检测用户名输入是否有效：10位数字，返回相应字符串
      */
-    public String extenceCheck(String userName) {
-        System.out.println("开始检验用户名是否存在");
+    public String extenceCheck(String userId) {
+        System.out.println("开始检验账号是否存在");
         try {
-            if (StringUtils.isBlank(userName)) {
-                System.out.println("用户名不可为空，应为10位");
-                return "用户名不可为空";
-            } else if (!isNumeric(userName) || userName.length() != 10) {
-                System.out.println("用户名应为10位学号");
-                return "用户名应为10位数字";
+            if (StringUtils.isBlank(userId)) {
+                System.out.println("账号不可为空，应为10位");
+                return "账号不可为空";
+            } else if (!isNumeric(userId) || userId.length() != 10) {
+                System.out.println("账号应为10位学号");
+                return "账号应为10位数字";
             } else {
-                if (userService.findUser(userName) != null) {
-                    System.out.println("用户已存在，请重新输入");
+                if (userService.findUserById(userId) != null) {
+                    System.out.println("账号已存在，请重新输入");
                     return "extence";
                 } else {
-                    System.out.println("用户不存在");
+                    System.out.println("账号不存在");
                     return "unExtence";
                 }
             }

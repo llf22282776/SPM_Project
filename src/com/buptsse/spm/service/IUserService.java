@@ -19,6 +19,8 @@ import com.buptsse.spm.domain.User;
 public interface IUserService {
 	public User findUser(String userName,String password);
 	public User findUser(String userName);
+	public User findUserById(String id);
+	public User findUserById(String id, String password);
 	public boolean insertUser(User user);
 	public List<User> searchUser(String choose);
 	public boolean deleteUser(String id);
