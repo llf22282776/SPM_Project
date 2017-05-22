@@ -57,7 +57,12 @@ public class UploadAction extends ActionSupport{
 
 	@Resource
 	private ISelectCourseService selectCourseService;	
-	
+	public static final String[] header=new String[]{
+	    ""
+	    
+	    
+	    
+	};
 
 
 	/**
@@ -117,6 +122,16 @@ public class UploadAction extends ActionSupport{
 	}
 
 	
+	/**
+	 * 
+	 * 
+	 * 
+	 * 
+	 * */
+	
+	
+	
+	
 	
 	/**
 	 * 上传成绩单
@@ -135,7 +150,14 @@ public class UploadAction extends ActionSupport{
 			if(rowNum>0){
 				for(int i=0;i<rowNum;++i){	
 					Course course = new Course();
-					course.setStudentId(scoreList[i][1]);
+					
+					int index1 = scoreList[i][1].lastIndexOf(".00");
+                    if(index1>-1){
+                        //对于班级需要特殊处理    
+                        course.setStudentId(scoreList[i][1].substring(0,index1));
+                    }else{
+                        course.setStudentId(scoreList[i][1]);
+                    }
 					course.setSyear(scoreList[i][2].substring(0,4));//对于年份需要特殊处理
 					course.setName(scoreList[i][3]);
 					//course.setClassId(scoreList[i][4]);
@@ -153,14 +175,15 @@ public class UploadAction extends ActionSupport{
 					//导入成绩的所有的学生状态都为“选课成功”
 					course.setStatus("2");
 					//course.setEmail("");
-					
+					course.setEmail(scoreList[i][9]);
+					course.setTelno(scoreList[i][10].indexOf(".00")==-1?scoreList[i][10]:scoreList[i][10].substring(0,scoreList[i][10].indexOf(".00")));
 					BigDecimal total=course.getDailyGrade().multiply(new BigDecimal(0.1))
 						.add(course.getMidGrade().multiply(new BigDecimal(0.1)))
 						.add(course.getPracticeGrade().multiply(new BigDecimal(0.2)))
 						.add(course.getFinalGrade().multiply(new BigDecimal(0.6)));
 					
 					course.setTotalGrade(total.setScale(2,BigDecimal.ROUND_HALF_UP));
-
+					
 					if("".equals(course.getStudentId())){
 						msg = "成绩上传失败，表格中学生学号不能为空！";	
 						break;
@@ -371,17 +394,11 @@ public class UploadAction extends ActionSupport{
 			}
 
 		}
-
 		in.close();
-
 		String[][] returnArray = new String[result.size()][rowSize];
-
 		for (int i = 0; i < returnArray.length; i++) {
-
 			returnArray[i] = (String[]) result.get(i);
-
 		}
-
 		return returnArray;
 
 	}

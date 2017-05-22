@@ -39,6 +39,14 @@
 			<result name="success"></result>
 			<result name="error">jsp/register.jsp</result>
 		</action>
+		<!-- 批量注册  返回的信息由httpRespones返回 -->
+		<action name="insertStudents" method="insertStudents" class="RegisterAction">
+			<result name="success"></result>
+			<result name="error"></result>
+		</action>
+		
+		
+		
 		<!-- 首页 -->
 		<action name="indexAction" method="index" class="IndexAction">
 			<result name="success">jsp/register.jsp</result>

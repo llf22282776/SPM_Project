@@ -29,7 +29,12 @@
     });
  }
  
- 
+ function loadStudent(){
+	 //添加学生信息
+	 
+	 
+	 
+ }
  //处理选课状态 flag=1表示批量确认操作，flag=2表示批量取消操作，falg=3 表示批量删除操作，flag=4表示确认操作， flag=5表示取消操作，flag=6 表示删除操作
  //operateType 标志位 U表示确认，C表示取消，D表示删除
  function deleteUser(flag){
@@ -66,15 +71,38 @@
  
  }
  
- 
- 
+ function openFlieWindow(){
+	$('#dlg1').dialog('open').dialog('setTitle','导入学生');
+ }
+
  function addUser(){
  
  	$('#dlg').dialog('open').dialog('setTitle','填写用户信息');
  	
  }
+  
+ function saveStudents(){
+	 var fileName = $('#file').filebox('getValue');
+	 	var prefix = fileName.substring(fileName.lastIndexOf(".")+1);
+	 	if(prefix=="xlsx"||prefix=="xls"){
+	 	
+		 	$('#fileUpload').form('submit',{
+				 url: "${pageContext.request.contextPath}/insertStudents.do", 	
+		         success: function(result){
+		        	  $.messager.alert("提示",result,'info',function (){
+		                  $('#fileUpload').form('clear');
+		                });
+		        }	
+		 	}); 	
+	 	}else{
+	 		$.messager.alert("提示信息","您上传的文件格式为："+prefix+"，请上传文件格式为xls或xlsx的文件");
+	 	}
+
+	 
+	 
+ }
  
-	 function saveUser(){
+ function saveUser(){
             $('#fm').form('submit',{
                 url: "${ctx}/insertUser.do",
                 success: function(result){
@@ -128,7 +156,7 @@
  	        <input type="button" class="btn btn-default" style="margin-right:20px;" onclick="query()" value="查  询" />
  	        <input type="button" class="btn btn-default" style="margin-right:20px;" onclick="clearForm()" value="重  置" />   
 			<input type="button" class="btn btn-default" style="margin-right:20px;" onclick="addUser()" value="添  加" /> 
-	   
+	   		<input type="button" class="btn btn-default" style="margin-right:20px;" onclick="openFlieWindow()" value="学生导入" /> 
 	    </div>
  
 </form> 
@@ -201,7 +229,21 @@
         <a href="javascript:void(0)" class="easyui-linkbutton c6" iconCls="icon-ok" onclick="saveUser()" style="width:90px">确认</a>
         <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#dlg').dialog('close')" style="width:90px">取消</a>
     </div>	 
-  
-  
+  	<div id="dlg1" class="easyui-dialog"  style="display:block;padding:10px 20px;width: 700px" closed="true" buttons="#dlg-buttons1" >   
+					<form id="fileUpload" method="post" action="" enctype="multipart/form-data">
+						<h2>
+						字段必须依次为:学号 姓名 邮箱
+						</h2>
+						学生名单：
+						<input class="easyui-filebox"  id="file" name="file"  required="true"  buttonText="选择文件"  style="width:500px; height: 26px">
+						<br />
+						<hr/>
+								
+					</form>
+	</div>
+  	<div id="dlg-buttons1">
+        <a href="javascript:void(0)" class="easyui-linkbutton c6" iconCls="icon-ok" onclick="saveStudents()" style="width:90px">确认</a>
+        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#dlg1').dialog('close')" style="width:90px">取消</a>
+    </div>	 
   </body>
 </html>
