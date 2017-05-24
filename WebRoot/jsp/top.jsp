@@ -192,7 +192,10 @@ body {
 			<div style="margin-left:90%;" ><h3>游客登陆</h3></div>	
 		</c:when>
 		<c:otherwise>	
-			<div style="margin-left:90%;" ><h3>欢迎您：${session.user.userName }</h3></div>	
+			<c:if test="${session.user.position eq '1'}"><div style="margin-left:85%;" ><h3>欢迎您:${session.user.userName } 身份:管理员</h3></div>	</c:if>
+			<c:if test="${session.user.position eq '2'}"><div style="margin-left:85%;" ><h3>欢迎您:${session.user.userName } 身份:教师</h3></div>	</c:if>
+			<c:if test="${session.user.position eq '3'}"><div style="margin-left:85%;" ><h3>欢迎您:${session.user.userName } 身份:学生</h3></div>	</c:if>
+			
 		</c:otherwise>
 	</c:choose>
 		

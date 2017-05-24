@@ -4,7 +4,7 @@
 	<head>
 		<title>"教育部-IBM精品课程建设项目"软件项目管理课程</title>
 		<link href="${ctx}/css/fontStyle.css" rel="stylesheet" type="text/css" />
-		
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<style type="text/css">
 
 			.vdlist{width:100%;}

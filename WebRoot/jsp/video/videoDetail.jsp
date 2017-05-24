@@ -3,6 +3,7 @@
 <html>
 	<head>
 		<title>"教育部-IBM精品课程建设项目"软件项目管理课程</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link href="${ctx}/css/spm.css" rel="stylesheet" type="text/css" />
 <link href="${ctx}/thirdParty/videoJs/video-js.css" rel="stylesheet" type="text/css" />		
 <script type="text/javascript" src="${ctx}/js/jquery-1.3.2.min1.js"></script>

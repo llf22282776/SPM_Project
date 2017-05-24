@@ -64,7 +64,11 @@ public class RedirectionFilter implements Filter{
               
               if(
                       requestURI.endsWith("/listDownload.do") ||
-                      requestURI.endsWith("/listExam.do")
+                      requestURI.endsWith("/listExam.do") ||
+                      requestURI.endsWith("/videoShow") ||
+                      requestURI.endsWith("/listSpChapter") ||
+                      requestURI.endsWith("/videoShow") ||
+                      requestURI.endsWith("/pauseSchedule") 
                       
                       ){
                   //游客不能访问的
@@ -103,8 +107,16 @@ public class RedirectionFilter implements Filter{
               chain.doFilter(req, res);  
               return;
           }
-          else if(thisUser.getPosition().equals(JspFitter.POSITION_STUDENT)){
+          else if(thisUser.getPosition().equals(JspFitter.POSITION_ADMIN)){
               //管理员
+              if(requestURI.endsWith("listSpChapter.do")){
+                  //管理员不能访问这个action
+                  System.out.println("正在过滤listSpChapter.do");
+                  response.sendRedirect(rootUrlString+"/error/authError.jsp");
+                  return;
+                  
+              }
+              
               chain.doFilter(req, res);  
               return;
           }else{

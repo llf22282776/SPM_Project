@@ -5,20 +5,22 @@
   <head>
  		<!-- ECharts单文件引入 -->
 		<script src="${ctx}/common/dist/echarts.js"></script>
+		<script type="text/javascript" src="${ctx}/js/sweetalert2.min.js"></script>
   </head>
   
   <script type="text/javascript">
-  
+  var thisrow=null;
   function clearForm(){
   	$('#ff').form('clear');
   }
   
   
   function formatOper(value,row,index){
-     return '<a href="#" class="easyui-linkbutton" onclick="sendEmail(2)">发邮件</a>';  
-   // return  '<input class="easyui-linkbutton" onclick="emailNotify()" value="发邮件" />';
+	 
+     return '<a href="#" class="easyui-linkbutton" onclick="sendEmail(2)">发邮件</a>&nbsp;/&nbsp;<a href="#" class="easyui-linkbutton" onclick="showUpdateDlg('+index+')">修改</a>&nbsp;&nbsp;';  
+  
  } 
- 
+
  
  //条件查询 
  function query(){
@@ -44,7 +46,18 @@
  
  }
  
- 
+ function updateOneStudent(){
+	 $('#fm').form('submit',{
+         url: "${ctx}/updateOneStudent.do",
+         success: function(result){
+        	 $.messager.alert("提示信息",result);               
+
+         }
+     });
+	 
+	 
+	 
+ }
 
  //处理选课状态 flag=1表示批量确认操作，flag=2表示批量取消操作，flag=3表示确认操作，flag=4表示取消操作
  function sendEmail(flag){
@@ -288,9 +301,34 @@
  	$('#dlg').dialog('open').dialog('setTitle','成绩上传');
  
  }
- 
- 
- 
+ function showUpdateDlg(index){
+	 					
+	 	
+	 	thisrow=$('#dg').datagrid('getData').rows[index];
+	 	var row=$('#dg').datagrid('getData').rows[index];
+	 	
+	 	
+
+	 	$("#input1").textbox("setValue",row.studentId);
+	 	$("#input2").textbox("setValue",row.classId);
+	 	$("#input3").textbox("setValue",row.name);
+	 	$("#input4").textbox("setValue",row.dailyGrade);
+	 	$("#input5").textbox("setValue",row.midGrade);
+	 	$("#input6").textbox("setValue",row.finalGrade);
+	 	$("#input7").textbox("setValue",row.totalGrade);
+	 	$('#dlg1').dialog('open').dialog('setTitle','成绩修改');
+	 }
+ function openDlg(){
+		var fmInputs=document.getElementById("updateTable").getElementsByClassName("easyui-textbox");
+	 	fmInputs[0].value=row.studentId;
+	 	fmInputs[1].value=row.classId;
+	 	fmInputs[2].value=row.name;
+	 	fmInputs[3].value=row.dailyGrade;
+	 	fmInputs[4].value=row.midGrade;
+	 	fmInputs[5].value=row.finalGrade;
+	 	fmInputs[6].value=row.totalGrade;
+	 
+ }
   //条件查询 
  function initDate(studentId,position){
  	if(position=="3"){
@@ -314,8 +352,8 @@
  	您作为管理员，无该功能权限！
  </c:if> 
 
-
-<div id="dlg" class="easyui-dialog"  style="padding:10px 20px;width: 700px" closed="true" buttons="#dlg-buttons" >   
+  	
+<div  id="dlg" class="easyui-dialog"  style="padding:10px 20px;width: 700px" closed="true" buttons="#dlg-buttons" >   
  <form id="fileUpload" method="post" enctype="multipart/form-data">
 	  <table style="border-collapse:collapse ;"  width="600px" height="50px" cellspacing="5" cellpadding="5"> 
 	 	<tr>
@@ -329,6 +367,53 @@
 <div id="dlg-buttons" align="center">
       <a href="javascript:void(0)"   class="easyui-linkbutton"  iconCls="icon-cancel" onclick="javascript:$('#dlg').dialog('close')" style="width:90px">关 闭</a>
 </div>  
+
+     <div id="dlg1" class="easyui-dialog"  style="padding:10px 30px"
+            closed="true" buttons="#dlg-buttons1"
+            onOpen="openDlg();"
+            onLoad="openDlg();"
+            >
+			<form name="fm" id="fm" action="" method="post">
+				<h2>
+					填写选课信息
+				</h2>
+				<table id="updateTable" border="0">
+					<tr>
+						<td>学号：</td>
+						<td> <input id="input1"  name="course.studentId" readOnly="true" class="easyui-textbox" required="true" style="height: 30px; width: 200px; " value="" /></td>
+					</tr>
+					<tr>
+						<td>班级：</td>
+						<td><input id="input2" name="course.classId" readOnly="true" class="easyui-textbox" required="true" style="height: 30px; width: 200px; " value=""/></td>
+					</tr>
+					<tr>
+						<td>姓名：</td>
+						<td><input id="input3" name="course.name" readOnly="true" class="easyui-textbox" required="true" style="height: 30px; width: 200px;" value=""/></td>
+					</tr>
+					<tr>
+						<td>平时成绩：</td>
+						<td><input id="input4" name="course.dailyGrade" data-options="required:true,validType:'number'" class="easyui-textbox" style="height: 30px; width: 200px; " value=""/></td>
+					</tr>					
+					<tr>
+						<td>期中成绩：</td>
+						<td><input  id="input5" name="course.midGrade" data-options="required:true,validType:'number'" class="easyui-textbox"    style="height: 30px; width: 200px;" value=""/></td>
+					</tr>
+					<tr>
+						<td>期末成绩：</td>
+						<td><input id="input6" name="course.finalGrade" data-options="required:true,validType:'number'" class="easyui-textbox" style="height: 30px; width: 200px;" value=""/></td>
+					</tr>	
+					<tr>
+						<td>试验成绩：</td>
+						<td><input id="input7" name="course.practiceGrade" data-options="required:true,validType:'number'"  class="easyui-textbox"   style="height: 30px; width: 200px;" value=""/></td>
+					</tr>										
+				</table>
+			
+			</form>
+    </div>
+    <div id="dlg-buttons1">
+        <a href="javascript:void(0)" class="easyui-linkbutton c6" iconCls="icon-ok" onclick="updateOneStudent();" style="width:90px">确认</a>
+        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#dlg1').dialog('close')" style="width:90px">取消</a>
+    </div>	 
   
  <c:if test="${session.user.position=='2' }">     
 	 <form id="ff" method="post">   
@@ -374,7 +459,11 @@
                 <th data-options="field:'finalGrade'" width="10%">期末成绩</th>
                 <th data-options="field:'practiceGrade'" width="10%">试验成绩</th>
                 <th data-options="field:'totalGrade'" width="10%">总成绩</th>
-                <th data-options="field:'_operate' ,formatter:formatOper" width="10%">个体通知</th>
+                <c:if test="${session.user.position =='2'  }">
+                	 <th data-options="field:'_operate' ,formatter:formatOper" width="10%">操作</th>
+                	
+                </c:if>
+               
             </tr>
         </thead>     
         
@@ -384,15 +473,15 @@
 	        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-redo" plain="true" onclick="sendEmail(1)">群发邮件通知成绩</a>
     	</c:if>
     	</div>
-  <div>
-  
+  </div>
+ 
    <div id="win"></div> 
    
   	<c:if test="${session.user.position=='2' }">
 		<!-- 成绩分析 
 		<input type="button" class="btn btn-default" onclick="showResult()" value="成绩分析">-->
-		<input type="button" class="btn btn-default" name="line" onclick="changeStyle(this)" value="成绩分析">
-		</input>
+		<input type="button" class="btn btn-default" name="line" onclick="changeStyle(this)" value="成绩分析" />
+		
 		<button id="button1" name="bar" class="btn btn-default"
 			onclick="changeStyle(this)">
 			柱状图

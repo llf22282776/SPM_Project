@@ -178,5 +178,11 @@ public class SelectCourseServiceImpl implements ISelectCourseService{
 		return iSelectCourseDao.countCourse(hql, paramList);
 	}
 
+    @Override
+    public boolean updateCourse1(Course course) {
+        // TODO Auto-generated method stub
+        return iSelectCourseDao.updateCourse(course);
+    }
+
 
 }

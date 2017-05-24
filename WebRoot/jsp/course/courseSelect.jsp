@@ -30,15 +30,16 @@
 	    $('#dataList')[0].style.display="";
 	    $('#dg').datagrid({
 	    	url:"${ctx}/courseQuery.do",
-	    	queryParams:{stdId:studentId}, //传参
+	    	queryParams:{
+	    		stdId:studentId,
+	    		status:"2"
+	    	}, //传参
 	        onLoadSuccess: function (data){
 	        	//alert(data.total);
 	        	if(data.total>0){
 	        		$('#selectButton')[0].style.display="none";
-	        	
 	        	}
 	        }
-	    
 	    }); 	
  	} 
  }
@@ -46,7 +47,6 @@
  
  //条件查询 
  function query(){
-	
     $('#dataList')[0].style.display="";
     $('#dg').datagrid({
     url:"${ctx}/courseQuery.do",
@@ -156,7 +156,7 @@
   </script>
   
   
- <body onload="initDate('${session.user.userName}','${session.user.position}')">
+ <body onload="initDate('${session.user.userId}','${session.user.position}')">
 	<h1 style="font-size: 28px;color: #00a1f1;border-bottom: 1px solid #b6d9e8;line-height: 50px;word-break:break-all;">
 	    选课
    </h1>  
@@ -188,8 +188,6 @@
 	    	</td>    
 	    	<td width="15%" align="right"><label for="syear">学年:</label></td>
 	    	<td width="15%"><input type="text" class="easyui-textbox" id="syear" ></input></td>
-	<!--    <td width="15%" align="right"><label for="email">结束时间:</label></td>
-	    	<td width="15%"><input type="text" class="easyui-datebox" ></input></td>-->    	
 	
 	
 	    </tr>
@@ -250,7 +248,7 @@
 				<table border="0">
 					<tr>
 						<td>学号：</td>
-						<td> <input  name="course.studentId" class="easyui-textbox" readonly="readonly" style="height: 30px; width: 200px; " value="${session.user.userName}" /></td>
+						<td> <input  name="course.studentId" class="easyui-textbox" readonly="readonly" style="height: 30px; width: 200px; " value="${session.user.userId}" /></td>
 					</tr>
 					<tr>
 						<td>班级：</td>

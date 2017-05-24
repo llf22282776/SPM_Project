@@ -91,7 +91,7 @@ public class SelectCourseDaoImpl extends BaseDAOImpl<Course> implements ISelectC
 	@Override
 	public Course findCourse(String studentId) {
 		// TODO Auto-generated method stub
-		Course Course = new Course();
+        Course Course = new Course();
 		try{
 			List<Course> list = new ArrayList<Course>();
 			list = super.find("from Course where studentId ='"+studentId+"'");

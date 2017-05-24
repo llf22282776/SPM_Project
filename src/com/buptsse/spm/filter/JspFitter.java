@@ -77,10 +77,14 @@ public class JspFitter implements Filter {
                 System.out.println(reqUri.endsWith("/courseSelect.jsp"));
                 System.out.println(reqUri.endsWith("/scoreQueryList.jsp") );
                 System.out.println(reqUri.endsWith("/mainMessage.jsp")  );
+                
                 if(
                         reqUri.endsWith("/courseSelect.jsp") ||
                         reqUri.endsWith("/scoreQueryList.jsp")  ||
-                        reqUri.endsWith("/mainMessage.jsp") 
+                        reqUri.endsWith("/mainMessage.jsp") ||
+                        reqUri.endsWith("/videoDetail.jsp") ||
+                        reqUri.endsWith("/videoList.jsp") ||
+                        reqUri.endsWith("/mainView.jsp")
                              ){
                          //游客不能访问的
                          System.out.println("不能放行:"+reqUri);
@@ -126,8 +130,15 @@ public class JspFitter implements Filter {
                 chain.doFilter(req, res);  
                 return;
             }
-            else if(thisUser.getPosition().equals(JspFitter.POSITION_STUDENT)){
-                //管理员
+            else if(thisUser.getPosition().equals(JspFitter.POSITION_ADMIN)){
+                //管理员，学习个毛视频
+                System.out.println("身份是管理员");
+                if(reqUri.endsWith("/videoList.jsp") || reqUri.endsWith("/videoDetail.jsp")){
+                    if(!response.isCommitted())response.sendRedirect(rootUrlString+"/error/authError.jsp");
+                    return;
+                    
+                    
+                }
                 chain.doFilter(req, res); 
                 return;
             }else{
@@ -142,28 +153,7 @@ public class JspFitter implements Filter {
       
     }
     /** 校验SESSION是否有效，判断session里面是否有user */
-    private void checkSession(HttpServletRequest request,
-            HttpServletResponse response) {
-        // 如果Session失效，跳回登录页面
-        HttpSession session =  request.getSession();
-        try {
-            if (session == null) {
-                    System.out.println("*****校验到session失效*****");
-                    if(!response.isCommitted())response.sendRedirect("/SPM_Project");
-                    return;
-            }else{
-                User user = (User)session.getAttribute("user");
-                if(user==null){
-                    System.out.println("*****校验到用户未登录*****");
-                    if(!response.isCommitted())response.sendRedirect("/SPM_Project/jsp/relogin.jsp");
-                    return;
-                }
-            }
-        } catch (Exception e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-    }   
+     
     @Override
     public void init(FilterConfig arg0) throws ServletException {
         // TODO Auto-generated method stub

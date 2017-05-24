@@ -87,7 +87,11 @@
 			<result name="success"></result>
 			<result name="error">jsp/error.jsp</result>
 		</action>
-
+		<!-- 更新某个学生的成绩 -->
+		<action name="updateOneStudent" method="updateOneStudent" class="courseAction">
+			<result name="success"></result>
+			<result name="error"></result>
+		</action>
 		<!-- 邮件通知 -->
 		<action name="emailNotify" method="emailNotify" class="emailAction">
 			<result name="success">jsp/course/notifySuccess.jsp</result>
@@ -284,12 +288,14 @@
 		<action name="listSpChapter" method="findSpChapterList" class="spChapterAction">
 			<result name="success">/jsp/video/video.jsp</result>
 			<result name="error">error/error.jsp</result>
+			<result name="error1">error/authError.jsp</result>
 		</action>
 
 		<!-- 视频章节查看 -->
 		<action name="videoShow" method="findSpChapter" class="spChapterAction">
 			<result name="success">/jsp/video/videoDetail.jsp</result>
 			<result name="error">error/error.jsp</result>
+			<result name="error1">error/authError.jsp</result>
 		</action>
 
 		<!-- 视频播放处理 -->

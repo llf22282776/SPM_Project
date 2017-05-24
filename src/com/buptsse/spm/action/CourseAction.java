@@ -1,6 +1,7 @@
 package com.buptsse.spm.action;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -17,6 +18,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.buptsse.spm.domain.Code;
 import com.buptsse.spm.domain.Course;
 import com.buptsse.spm.domain.User;
+import com.buptsse.spm.filter.JspFitter;
 import com.buptsse.spm.service.ICodeService;
 import com.buptsse.spm.service.ISelectCourseService;
 import com.opensymphony.xwork2.ActionContext;
@@ -66,7 +68,7 @@ public class CourseAction extends ActionSupport{
 		paramMap.put("name", name);
 		paramMap.put("status", status);
 		paramMap.put("syear", syear);
-		
+		System.out.println(stdId);
 		List<Course> list = selectCourseService.findPage(paramMap,page, rows);
 		
 		for(Course course:list){
@@ -93,8 +95,50 @@ public class CourseAction extends ActionSupport{
 	}
 	
 	
-
-	
+    /**
+     * 
+     * 更新某个学生的成绩
+     * 
+     * 
+     * */
+	public String updateOneStudent(){
+	    User user = (User)ServletActionContext.getRequest().getSession().getAttribute("user");
+	    if(user ==null || user.getPosition().equals(JspFitter.POSITION_TEACHER) == false){
+	        try {
+                ServletActionContext.getResponse().getWriter().write("您无权进行此操作");
+                
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+	        return null;
+	    }
+	        BigDecimal total=course.getDailyGrade().multiply(new BigDecimal(0.1))
+                .add(course.getMidGrade().multiply(new BigDecimal(0.1)))
+                .add(course.getPracticeGrade().multiply(new BigDecimal(0.2)))
+                .add(course.getFinalGrade().multiply(new BigDecimal(0.6)));
+            
+            course.setTotalGrade(total.setScale(2,BigDecimal.ROUND_HALF_UP));
+	    if(selectCourseService.updateCourse1(course)==true){
+	        try {
+                ServletActionContext.getResponse().getWriter().write("更新成功");
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+	    }else {
+	        
+	        try {
+                ServletActionContext.getResponse().getWriter().write("更新失败");
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+	        
+	        
+	    }
+	    return null;
+	}
 	
 	/**
 	 * 更新课程信息，可批量更新
@@ -159,8 +203,30 @@ public class CourseAction extends ActionSupport{
 		Map<String, Object> map=new HashMap<String, Object>();
 		Course courseExit = selectCourseService.findCourse(course.getStudentId());
 		if(courseExit!=null){
-			map.put("code", "2");
-			map.put("message", "学号为"+course.getStudentId()+"的学生已选课成功，请勿重复选课！");			
+		    if(courseExit.getStatus().equals("2") ==false){
+		        //不是选中的状态
+		        course.setStatus("1");
+	            boolean flag=false;
+	            try{
+	                flag = selectCourseService.saveOrUpdate(course);
+	            }catch(Exception e){
+	                e.printStackTrace();
+	                flag=false;
+	            }
+
+	            if(flag){
+	                
+	                map.put("code", "1");
+	                map.put("message", "选课成功！");
+	            }else{
+	                map.put("code", "2");
+	                map.put("message", "选课失败，请联系管理员！");
+	            }           
+		        
+		    }else {
+	            map.put("code", "2");
+	            map.put("message", "学号为"+course.getStudentId()+"的学生已选课成功，请勿重复选课！");   
+		    }
 		}else{
 			//初始化状态
 			course.setStatus("1");
@@ -173,6 +239,7 @@ public class CourseAction extends ActionSupport{
 			}
 
 			if(flag){
+			    
 				map.put("code", "1");
 				map.put("message", "选课成功！");
 			}else{

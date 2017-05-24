@@ -25,13 +25,13 @@
 			</c:when>
 			<c:otherwise>
 				<c:choose>
-					<c:when test="${session.user.type eq '1'}">
+					<c:when test="${session.user.position eq '2'}">
 						您是的身份是 教师 ，无权进行此项操作,请登出切换账号
 					</c:when>
-					<c:when test="${session.user.type eq '2'}">
+					<c:when test="${session.user.position eq '1'}">
 						您是的身份是 管理员 ，无权进行此项操作,请登出切换账号
 					</c:when>
-					<c:when test="${session.user.type eq '3'}">
+					<c:when test="${session.user.position eq '3'}">
 						您是的身份是 学生，无权进行此项操作,请登出切换账号
 					</c:when>
 					<c:otherwise>

@@ -20,6 +20,7 @@ public interface ISelectCourseService {
 		public boolean savaCourse(Course course);
 		public boolean deleteCourse(String studentId);
 		public boolean updateCourse(Course course);
+		public boolean updateCourse1(Course course);
 		public List<Course> findAllCourse();
 		public List findPage(Map param,Integer page,Integer rows);
 		public boolean changeStatus(String studnetId,int newStatus);

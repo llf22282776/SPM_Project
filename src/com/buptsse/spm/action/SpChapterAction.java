@@ -13,14 +13,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
+
 import com.buptsse.spm.domain.Schedule;
 import com.buptsse.spm.domain.SpChapter;
 import com.buptsse.spm.domain.SpChapterVideo;
 import com.buptsse.spm.domain.User;
+import com.buptsse.spm.filter.JspFitter;
 import com.buptsse.spm.service.IScheduleService;
 import com.buptsse.spm.service.ISpChapterService;
 import com.buptsse.spm.service.ISpChapterVideoService;
-
 import com.opensymphony.xwork2.ActionSupport;
 
 
@@ -73,6 +74,14 @@ public class SpChapterAction extends ActionSupport{
 		
 		
 		User user = (User)ServletActionContext.getRequest().getSession().getAttribute("user");
+		if(user == null || user.getPosition().equals(JspFitter.POSITION_ADMIN)){
+		    return "error1";
+		    
+		}else if(user.getPosition().equals(JspFitter.POSITION_TEACHER) && 1>2){
+		    //老师应该是一个查询页面的jsp
+		    
+		    return null;
+		}else {
 		spChapterList = spChapterService.findSpChapterDetial();
 		
 		int averageTotal=0;
@@ -84,6 +93,9 @@ public class SpChapterAction extends ActionSupport{
 			int sumValueTotal=0;
 			int k=0;
 			List<Schedule> scheduleListtmp = scheduleService.findScheduleByUserIdAndChapterId(Integer.parseInt(spchapter[0].toString()), user.getUserId());
+			
+			
+			
 			for(Schedule schedule:scheduleListtmp){
 				sumValueTotal+=schedule.getPercent();
 				k++;
@@ -95,10 +107,9 @@ public class SpChapterAction extends ActionSupport{
 		
 		//总进度赋值
 		totalSchedule = averageTotal/17;
-		
-		
-		
 		return "success";
+		
+		}
 	}	
 	
 	
@@ -108,8 +119,12 @@ public class SpChapterAction extends ActionSupport{
 	 * @throws Exception
 	 */
 	public String findSpChapter() throws Exception{
-		
-		User user = (User)ServletActionContext.getRequest().getSession().getAttribute("user");
+	    User user = (User)ServletActionContext.getRequest().getSession().getAttribute("user");
+	    if(user == null || user.getPosition().equals(JspFitter.POSITION_ADMIN)){
+            return "error1";
+            
+        }
+	
 		spChapterVideoList = spChapterVideoService.findSpChapterVideoByChapterId(spChapter.getChapter_id());
 		
 		spChapterName = "第"+spChapter.getChapter_id()+"章 "+spChapter.getChapter_name();
@@ -151,7 +166,7 @@ public class SpChapterAction extends ActionSupport{
 
 	public void setSpChapterVideoService(
 			ISpChapterVideoService spChapterVideoService) {
-		spChapterVideoService = spChapterVideoService;
+		    spChapterVideoService = spChapterVideoService;
 	}
 	
 	public SpChapterVideo getSpChapterVideo() {
