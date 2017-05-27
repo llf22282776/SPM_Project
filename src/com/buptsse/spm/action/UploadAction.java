@@ -32,7 +32,10 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.apache.struts2.ServletActionContext;
 
 import com.buptsse.spm.domain.Course;
+import com.buptsse.spm.domain.User;
 import com.buptsse.spm.service.ISelectCourseService;
+import com.buptsse.spm.service.IUserService;
+import com.buptsse.spm.util.ConstantUtil;
 import com.opensymphony.xwork2.ActionSupport;
 
 
@@ -57,6 +60,9 @@ public class UploadAction extends ActionSupport{
 
 	@Resource
 	private ISelectCourseService selectCourseService;	
+	@Resource
+	private IUserService userService;
+	
 	public static final String[] header=new String[]{
 	    ""
 	    
@@ -161,6 +167,7 @@ public class UploadAction extends ActionSupport{
 					course.setSyear(scoreList[i][2].substring(0,4));//对于年份需要特殊处理
 					course.setName(scoreList[i][3]);
 					//course.setClassId(scoreList[i][4]);
+					
 					int index = scoreList[i][4].lastIndexOf(".00");
 					if(index>-1){
 						//对于班级需要特殊处理	
@@ -189,7 +196,14 @@ public class UploadAction extends ActionSupport{
 						break;
 					}else{
 						selectCourseService.saveOrUpdate(course);
+						
 						msg = "成绩上传成功！";	
+						if(userService.findUserById(course.getStudentId())==null){
+						    //没有这个用户，那就加一个用户
+						    User thisUser=toStudentUser(course);
+						    userService.addUser(thisUser);
+						    
+						}
 					}
 				}				
 			}else{
@@ -456,7 +470,23 @@ public class UploadAction extends ActionSupport{
 	public void setFileContentType(List<String> fileContentType) {
 		this.fileContentType = fileContentType;
 	}
-
+	  private User toStudentUser(Course course){
+	        User user=new User();
+	        try {
+	            
+	            user.setId(course.getStudentId()); //id
+	            user.setUserId(course.getStudentId()); //学号
+	            user.setPosition(ConstantUtil.POSITION_STUDENT);
+	            user.setPassword(course.getStudentId()); //密码
+	            user.setUserName(course.getName());
+	            user.setEmail(course.getEmail());
+	        } catch (Exception e) {
+	            // TODO: handle exception
+	            System.out.println(e.getMessage());
+	            return null;
+	        }
+	        return user;
+	    }
 /*	public String execute() throws Exception {
 		uploadFile(0);
 		return "success";

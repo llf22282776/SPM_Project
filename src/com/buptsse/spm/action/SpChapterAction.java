@@ -14,12 +14,15 @@ import org.slf4j.LoggerFactory;
 
 
 
+
+
 import com.buptsse.spm.domain.Schedule;
 import com.buptsse.spm.domain.SpChapter;
 import com.buptsse.spm.domain.SpChapterVideo;
 import com.buptsse.spm.domain.User;
 import com.buptsse.spm.filter.JspFitter;
 import com.buptsse.spm.service.IScheduleService;
+import com.buptsse.spm.service.ISelectCourseService;
 import com.buptsse.spm.service.ISpChapterService;
 import com.buptsse.spm.service.ISpChapterVideoService;
 import com.opensymphony.xwork2.ActionSupport;
@@ -44,6 +47,9 @@ public class SpChapterAction extends ActionSupport{
 	
 	@Resource
 	private IScheduleService scheduleService;
+	
+	@Resource
+	private ISelectCourseService selectCourseService;
 	
 	public List spChapterList = new ArrayList();
 	
@@ -82,6 +88,17 @@ public class SpChapterAction extends ActionSupport{
 		    
 		    return null;
 		}else {
+		  Map parMap=  new HashMap();
+		  parMap.put("studentId",user.getUserId());
+		  parMap.put("status",2+"");
+		  Long countNums=selectCourseService.count(parMap);
+		  
+		if(countNums<=0){
+		    //选了课，但是没有确认
+		    ServletActionContext.getResponse().getWriter().write("您还没有选课或者被确认，无法查看视频进度");
+		    return null;
+		}    
+		    
 		spChapterList = spChapterService.findSpChapterDetial();
 		
 		int averageTotal=0;
@@ -89,13 +106,14 @@ public class SpChapterAction extends ActionSupport{
 		for(int i=0;i<spChapterList.size();i++){	
 			//SpChapter spChapter = (SpChapter)spChapterList.get(i);
 			Object[] spchapter = (Object[])spChapterList.get(i);
-			
 			int sumValueTotal=0;
 			int k=0;
+			//如果他没有schedule呢，怎么办，扯犊子吗？，list都没有，肯定不行，想办法搞list，就是在选课，加入学生的时候，搞事
 			List<Schedule> scheduleListtmp = scheduleService.findScheduleByUserIdAndChapterId(Integer.parseInt(spchapter[0].toString()), user.getUserId());
-			
-			
-			
+			if(scheduleListtmp.size()<=0){
+			   
+			    
+			}
 			for(Schedule schedule:scheduleListtmp){
 				sumValueTotal+=schedule.getPercent();
 				k++;
@@ -104,7 +122,6 @@ public class SpChapterAction extends ActionSupport{
 			//存入章节进度
 			chapterScheduleList.add(sumValueTotal/k);
 		}
-		
 		//总进度赋值
 		totalSchedule = averageTotal/17;
 		return "success";

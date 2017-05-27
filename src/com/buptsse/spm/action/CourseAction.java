@@ -21,8 +21,11 @@ import com.buptsse.spm.domain.User;
 import com.buptsse.spm.filter.JspFitter;
 import com.buptsse.spm.service.ICodeService;
 import com.buptsse.spm.service.ISelectCourseService;
+import com.mysql.jdbc.StringUtils;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
+
+import freemarker.template.utility.StringUtil;
 
 
 /**
@@ -43,7 +46,7 @@ public class CourseAction extends ActionSupport{
 	protected String name="";
 	protected String status="";
 	protected String syear="";
-	
+	protected String position="";
 	private String operateType;	
 
 	@Resource
@@ -72,17 +75,30 @@ public class CourseAction extends ActionSupport{
 		List<Course> list = selectCourseService.findPage(paramMap,page, rows);
 		
 		for(Course course:list){
+		    
 			Code code =  codeService.findCodeName("status", course.getStatus());
 			String codeName =code.getCodeName();
-			course.setStatus(codeName);
+			course.setStatus(codeName);//2变成“已选课程”，类似这样
 		}
-
+		
 		//查询总条数
 		Long total = selectCourseService.count(paramMap);
-		
+		Long total1=-1L,total2=-1L;
+		 
+		if(position!=null && position.equals(JspFitter.POSITION_STUDENT)){
+		    
+		    paramMap.put("status", 1+"");//正在申请中,马丹，字符串搞成了数字，感觉爆炸
+		    total1 = selectCourseService.count(paramMap);
+		    paramMap.put("status", 3+"");//已被取消
+		    total2 = selectCourseService.count(paramMap);
+		  
+		}
+		System.out.println("total1:"+total1+" total2:"+total2);
 		Map<String, Object> map=new HashMap<String, Object>();
 		map.put("rows", list);
 		map.put("total", total);
+		if(total1!=-1L)map.put("total1", total1);
+		if(total2!=-1L)map.put("total2", total2);//
 		String str=JSONObject.toJSONString(map);
 		try {
 			ServletActionContext.getResponse().getWriter().write(str);
@@ -335,5 +351,15 @@ public class CourseAction extends ActionSupport{
 	public void setCodeService(ICodeService codeService) {
 		this.codeService = codeService;
 	}
+
+
+    public String getPosition() {
+        return position;
+    }
+
+
+    public void setPosition(String position) {
+        this.position = position;
+    }
 		
 }

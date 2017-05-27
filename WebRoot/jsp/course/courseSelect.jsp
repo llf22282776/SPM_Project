@@ -32,13 +32,30 @@
 	    	url:"${ctx}/courseQuery.do",
 	    	queryParams:{
 	    		stdId:studentId,
-	    		status:"2"
+	    		status:"2",
+	    		position:"3"
 	    	}, //传参
 	        onLoadSuccess: function (data){
 	        	//alert(data.total);
-	        	if(data.total>0){
+	        
+	        	if(data.total1>0){
+	        		//正在申请,
+	        		$('#selectButton')[0].value="申请中";
+	        		$('#selectButton')[0].attr("disabled",true);
+	        		
+	        	}else if(data.total2>0){
+	        		//已被取消
+	        		$('#selectButton')[0].value="再次申请";
+	        		
+	        	}else if(data.total>0){
+	        		//没有正在申请的也没有已被取消的,但是有已经同意的
 	        		$('#selectButton')[0].style.display="none";
+	        		 
+	        	}else{
+	        		//都没有，没选，什么也不做
 	        	}
+	        	
+	        	
 	        }
 	    }); 	
  	} 
@@ -276,7 +293,7 @@
     </div>
     <div id="dlg-buttons">
         <a href="javascript:void(0)" class="easyui-linkbutton c6" iconCls="icon-ok" onclick="saveSelectCourse()" style="width:90px">确认</a>
-        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#dlg').dialog('close')" style="width:90px">取消</a>
+        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#dlg').dialog('close');window.location.reload()" style="width:90px">取消</a>
     </div>	 
   
   

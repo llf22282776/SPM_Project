@@ -30,7 +30,8 @@
     queryParams:{stdId:$('#studentId').val(),
     			classId:$('#classId').val(),
     			name:$('#name').val(),
-    			syear:$('#syear').val()} //传参
+    			syear:$('#syear').val()}, //传参
+    			status:2 //老师搜的，必须是已经同意选课的同学
     });
     
  }
