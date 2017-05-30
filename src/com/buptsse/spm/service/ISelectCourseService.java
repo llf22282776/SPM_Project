@@ -26,4 +26,5 @@ public interface ISelectCourseService {
 		public boolean changeStatus(String studnetId,int newStatus);
 		public Long count(Map param );
 		public boolean saveOrUpdate(Course course);
+		
 }

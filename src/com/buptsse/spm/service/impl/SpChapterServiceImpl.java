@@ -45,12 +45,32 @@ public class SpChapterServiceImpl implements ISpChapterService{
 	@Override
 	public List<SpChapter> findAllSpChapter() {
 		// TODO Auto-generated method stub
-		String hql = "from SpChapter";
-		List list = new ArrayList();
-		return iSpChapterDao.findSpChapter(hql, list);
+	   String hql = "select * from sp_chapter";
+
+	   List list = new ArrayList();
+     
+     //List resultList = iSpChapterDao.findSpChapter(hql, list);
+     List resultList = iSpChapterDao.findSpChapterDetial(hql);
+     //iSpChapterDao.findSpChapterDetial(hql);
+     System.out.println("**resultList***:"+resultList.size());
+     
+     return resultList;
 	}
 	
-	
+	   @Override
+	    public List<SpChapter> findAllSpChapter1() {
+	        // TODO Auto-generated method stub
+	       String hql = "select * from sp_chapter";
+
+	       List list = new ArrayList();
+	     
+	     //List resultList = iSpChapterDao.findSpChapter(hql, list);
+	     List resultList = iSpChapterDao.findSpChapterDetial(hql);
+	     //iSpChapterDao.findSpChapterDetial(hql);
+	     System.out.println("**resultList***:"+resultList.size());
+	     
+	     return resultList;
+	    }
 	@Override
 	public List findSpChapterDetial() {
 		// TODO Auto-generated method stub

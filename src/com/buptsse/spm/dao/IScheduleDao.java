@@ -1,6 +1,7 @@
 package com.buptsse.spm.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import com.buptsse.spm.domain.Course;
 import com.buptsse.spm.domain.Schedule;
@@ -24,6 +25,7 @@ public interface IScheduleDao {
 	public boolean saveOrUpdateSchedule(Schedule schedule);
 	public Long countSchedule(String hql,List param);
 	public Schedule findScheduleById(Integer id);
-	
+	public List findPage(String hql,List param , Integer page,Integer rows);
+	public List findWihtSql(String hql);
 
 }

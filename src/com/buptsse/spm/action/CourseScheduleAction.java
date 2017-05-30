@@ -55,7 +55,6 @@ public class CourseScheduleAction extends ActionSupport{
 	 */
 	public String pauseSchedule() throws Exception{
 		
-		String uid = "1";//先写死为第一个用户，后续需要从session中取。
 		
 		User user = (User)ServletActionContext.getRequest().getSession().getAttribute("user");
 		
@@ -149,8 +148,8 @@ public class CourseScheduleAction extends ActionSupport{
 			//更新用户播放时间
 			userService.updateUser(user);
 		
-			//更新session中的数据
-			ServletActionContext.getRequest().getSession().setAttribute("user", user);	        
+		
+		      
 			
 		}		
 		

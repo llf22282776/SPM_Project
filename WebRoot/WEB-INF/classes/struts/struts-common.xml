@@ -287,23 +287,29 @@
 		<!-- 教学视频 -->
 		<action name="listSpChapter" method="findSpChapterList" class="spChapterAction">
 			<result name="success">/jsp/video/video.jsp</result>
+			<result name="teacher">/jsp/video/videoSelect.jsp</result>
 			<result name="error">error/error.jsp</result>
 			<result name="error1">error/authError.jsp</result>
-		</action>
+		</action> 
 
 		<!-- 视频章节查看 -->
 		<action name="videoShow" method="findSpChapter" class="spChapterAction">
 			<result name="success">/jsp/video/videoDetail.jsp</result>
+			<result name="success1">/jsp/video/videoSelect.jsp</result>
 			<result name="error">error/error.jsp</result>
 			<result name="error1">error/authError.jsp</result>
 		</action>
-
+ 
 		<!-- 视频播放处理 -->
 		<action name="pauseSchedule" method="pauseSchedule" class="courseScheduleAction">
 			<result name="success"></result>
 			<result name="error">error/error.jsp</result>
 		</action>
-
+		<!-- 老师查看进度 -->
+		<action name="scheduleCheck" method="scheduleCheck" class="spChapterAction">
+			<result name="success"></result>
+			<result name="error">error/authError.jsp</result>
+		</action>
 
 
 		<!-- 系统配置表 -->

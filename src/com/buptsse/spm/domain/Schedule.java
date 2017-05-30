@@ -14,7 +14,28 @@ public class Schedule implements Serializable{
 	private int chapter_id;
 	private int video_step_order;
 	private int percent;
-	private String userid;
+	private String name;
+	private String chapterName;
+	private String videoName;
+	public String getChapterName() {
+        return chapterName;
+    }
+    public void setChapterName(String chapterName) {
+        this.chapterName = chapterName;
+    }
+    public String getVideoName() {
+        return videoName;
+    }
+    public void setVideoName(String videoName) {
+        this.videoName = videoName;
+    }
+    public String getName() {
+        return name;
+    }
+    public void setName(String name) {
+        this.name = name;
+    }
+    private String userid;
 	
 	public int getChapter_id() {
 		return chapter_id;

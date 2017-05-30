@@ -16,6 +16,13 @@ import org.slf4j.LoggerFactory;
 
 
 
+
+
+
+
+
+import com.alibaba.fastjson.JSONObject;
+import com.buptsse.spm.domain.Course;
 import com.buptsse.spm.domain.Schedule;
 import com.buptsse.spm.domain.SpChapter;
 import com.buptsse.spm.domain.SpChapterVideo;
@@ -57,6 +64,8 @@ public class SpChapterAction extends ActionSupport{
 	
 	public List scheduleList = new ArrayList();	
 	
+	public List videoList =new ArrayList<SpChapterVideo>();
+	public List chapterList=new ArrayList<SpChapter>();
 	public SpChapter spChapter;
 	
 	public SpChapterVideo spChapterVideo;
@@ -69,7 +78,12 @@ public class SpChapterAction extends ActionSupport{
 	
 	public List chapterScheduleList =  new ArrayList(); ;//章节进度
 
-
+	
+	   
+	public String    spChapterId ;
+	public String     spChapterVideoId;
+	public String     percent;
+	public String     studentId;
 
 	/**
 	 * 查找所有的视频
@@ -83,10 +97,12 @@ public class SpChapterAction extends ActionSupport{
 		if(user == null || user.getPosition().equals(JspFitter.POSITION_ADMIN)){
 		    return "error1";
 		    
-		}else if(user.getPosition().equals(JspFitter.POSITION_TEACHER) && 1>2){
+		}else if(user.getPosition().equals(JspFitter.POSITION_TEACHER)  ){
 		    //老师应该是一个查询页面的jsp
-		    
-		    return null;
+		     videoList=spChapterVideoService.findAllSpChapterVideo();
+		     chapterList=spChapterService.findAllSpChapter1();
+		   
+		    return "teacher";
 		}else {
 		  Map parMap=  new HashMap();
 		  parMap.put("studentId",user.getUserId());
@@ -97,7 +113,7 @@ public class SpChapterAction extends ActionSupport{
 		    //选了课，但是没有确认
 		    ServletActionContext.getResponse().getWriter().write("您还没有选课或者被确认，无法查看视频进度");
 		    return null;
-		}    
+		}     
 		    
 		spChapterList = spChapterService.findSpChapterDetial();
 		
@@ -111,13 +127,15 @@ public class SpChapterAction extends ActionSupport{
 			//如果他没有schedule呢，怎么办，扯犊子吗？，list都没有，肯定不行，想办法搞list，就是在选课，加入学生的时候，搞事
 			List<Schedule> scheduleListtmp = scheduleService.findScheduleByUserIdAndChapterId(Integer.parseInt(spchapter[0].toString()), user.getUserId());
 			if(scheduleListtmp.size()<=0){
-			   
-			    
+			   //这个章节的表还没有
+			    insertAllSchedule(Integer.parseInt(spchapter[0].toString()), user.getUserId());
+			    //scheduleListtmp = scheduleService.findScheduleByUserIdAndChapterId(Integer.parseInt(spchapter[0].toString()), user.getUserId());
 			}
 			for(Schedule schedule:scheduleListtmp){
 				sumValueTotal+=schedule.getPercent();
 				k++;
 			}
+			if(k==0)k=1;
 			averageTotal+=sumValueTotal/k;
 			//存入章节进度
 			chapterScheduleList.add(sumValueTotal/k);
@@ -126,7 +144,7 @@ public class SpChapterAction extends ActionSupport{
 		totalSchedule = averageTotal/17;
 		return "success";
 		
-		}
+		} 
 	}	
 	
 	
@@ -153,8 +171,78 @@ public class SpChapterAction extends ActionSupport{
 		
 		return "success";
 	}		
-	
-	
+	/**
+	 * 老师查看学习进度,
+	 * 
+	 * 
+	 * */
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+    public String scheduleCheck(){
+	    int page=Integer.parseInt(ServletActionContext.getRequest().getParameter("page"));
+        int rows=Integer.parseInt(ServletActionContext.getRequest().getParameter("rows"));
+        System.out.println(page+" "+rows);
+        Map paramMap = new HashMap();
+        int percent_1=0;
+        int chapter_id_1=0;
+        int spChapterVideoId_1=0;
+        try {
+             percent_1=Integer.parseInt(percent);
+
+        } catch (Exception e) {
+            // TODO: handle exception
+             percent_1=-1;
+        } 
+        try {
+            chapter_id_1=Integer.parseInt(spChapterId);
+
+       } catch (Exception e) {
+           // TODO: handle exception
+           chapter_id_1=-1;
+       }
+        try {
+            spChapterVideoId_1=Integer.parseInt(spChapterVideoId);
+
+       } catch (Exception e) {
+           // TODO: handle exception
+           spChapterVideoId_1=-1;
+       }
+        System.out.println(percent+" "+ spChapterId+" "+spChapterVideoId);
+        System.out.println(percent_1+" "+ chapter_id_1+" "+spChapterVideoId_1);
+        paramMap.put("chapter_id", chapter_id_1);
+        paramMap.put("video_step_order", spChapterVideoId_1);
+        paramMap.put("percent", percent_1);
+        paramMap.put("userid", studentId);
+        List<Schedule> list = scheduleService.findPage(paramMap, page, rows);
+        for(Schedule schedule:list){
+            Course course= selectCourseService.findCourse(studentId);
+            SpChapter spChapter=spChapterService.findSpChapterById(spChapterId);
+            SpChapterVideo  svideo=spChapterVideoService.findSpChapterVideoById(spChapterVideoId);
+            if(course!=null){
+                schedule.setName(course.getName());
+                
+            }
+            if(spChapter!=null){
+                schedule.setVideoName(spChapter.getChapter_name());
+                
+            }
+            if(svideo!=null){
+                schedule.setChapterName(svideo.getVideo_name());
+                
+            }
+        }
+        Map<String, Object> map=new HashMap<String, Object>();
+        map.put("rows",list);
+        map.put("total", list.size());
+        String str=JSONObject.toJSONString(map);
+        try {
+            ServletActionContext.getResponse().getWriter().write(str);
+            
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+	    return null;
+	}
 
 	
 	
@@ -274,7 +362,59 @@ public class SpChapterAction extends ActionSupport{
 	public void setSpChapterList(List spChapterList) {
 		this.spChapterList = spChapterList;
 	}
+	private void insertAllSchedule(int spId,String userId){
+	    List<SpChapterVideo> spChapterVideos=spChapterVideoService.findSpChapterVideoByChapterId(spId);
+	    for(SpChapterVideo sVideo:spChapterVideos){
+	        Schedule schedule=new Schedule();
+	        schedule.setChapter_id(spId);
+	        schedule.setVideo_step_order(sVideo.getVideo_step_order());
+	        schedule.setPercent(0);
+	        schedule.setUserid(userId);;
+	        scheduleService.insertSchedule(schedule);
+	    }
+	    
+	}
 
+
+    public String getSpChapterId() {
+        return spChapterId;
+    }
+
+
+    public void setSpChapterId(String spChapterId) {
+        this.spChapterId = spChapterId;
+    }
+
+
+    public String getSpChapterVideoId() {
+        return spChapterVideoId;
+    }
+
+
+    public void setSpChapterVideoId(String spChapterVideoId) {
+        this.spChapterVideoId = spChapterVideoId;
+    }
+
+
+
+    public String getPercent() {
+        return percent;
+    }
+
+
+    public void setPercent(String percent) {
+        this.percent = percent;
+    }
+
+
+    public String getStudentId() {
+        return studentId;
+    }
+
+
+    public void setStudentId(String studentId) {
+        this.studentId = studentId;
+    }
 	
 	
 	

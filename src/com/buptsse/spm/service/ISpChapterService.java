@@ -21,7 +21,7 @@ public interface ISpChapterService {
 	public List<SpChapter> findAllSpChapter();
 	public boolean deleteSpChapter(String id);
 	public boolean saveOrUpdate(SpChapter spChapter);
-	
+	public List<SpChapter> findAllSpChapter1();
 	public List findSpChapterDetial();
 	
 	

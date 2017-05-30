@@ -38,6 +38,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.buptsse.spm.domain.Code;
 import com.buptsse.spm.domain.Course;
 import com.buptsse.spm.domain.User;
+import com.buptsse.spm.filter.JspFitter;
 import com.buptsse.spm.service.ICodeService;
 import com.buptsse.spm.service.IUserService;
 import com.buptsse.spm.util.ConstantUtil;
@@ -214,7 +215,18 @@ public class RegisterAction extends ActionSupport {
         @SuppressWarnings("rawtypes")
         Map sessionMap=ActionContext.getContext().getSession();
         User user=(User) sessionMap.get("user");
+        if(user ==null || user.getPosition().equals(JspFitter.POSITION_ADMIN) == false ){
+            try {
+                ServletActionContext.getResponse().getWriter().write("您没有权限");
+                return null;
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+            
+        }
         String str = "";
+        
         String[] ids = ServletActionContext.getRequest().getParameterValues(
                 "ids[]");//可以传数组的
         boolean[] booleanlist=new boolean[ids.length];

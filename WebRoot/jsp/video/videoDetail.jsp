@@ -14,129 +14,6 @@
 <script type="text/javascript" src="${ctx}/js/float.js"></script>
 <script type="text/javascript" src="${ctx}/thirdParty/videoJs/video.js"></script>
 
-<script>
-   $(function(){
-
-    function tanchuceng(width,height,tit,url,type,num){
-    var winWinth = $(window).width(),winHeight = $(document).height();
-    $("body").append("<div class='winbj'></div>");
-    $("body").append("<div class='tanChu'><div class='tanChutit'><span class='tanchuTxt'>"+tit+"</span><span class='tanchuClose'>关闭</span></div><div class='vdiv'><video id='example_video_"+num+"' class='video-js vjs-default-skin' controls preload='none' width='750' height='350'><source src='"+url+"' type='"+type+"' /></video></div><div class='quceshi' style='display:none'><a href='javascript:'>已看完</a></div></div>");
-    $(".winbj").css({width:winWinth,height:winHeight,background:"#000",position:"absolute",left:"0",top:"0"});
-    $(".winbj").fadeTo(0, 0.5);
-    var tanchuLeft = $(window).width()/2 - width/2;
-    var tanchuTop = $(window).height()/2 - height/2 + $(window).scrollTop();
-    $(".tanChu").css({width:width,height:height,border:"3px #ccc solid",left:tanchuLeft,top:tanchuTop,background:"#fff",position:"absolute"});
-    $(".tanChutit").css({width:width,height:"25px","border-bottom":"1px #ccc solid",background:"#eee","line-height":"25px"});
-    $(".tanchuTxt").css({"text-indent":"5px","float":"left","font-size":"14px"});
-    $(".tanchuClose").css({"width":"40px","float":"right","font-size":"12px","color":"#666","cursor":"pointer"});
-    var winIframeHeight = height - 26;
-    $(".winIframe").css({width:width,height:winIframeHeight,"border-bottom":"1px #ccc solid",background:"#ffffff"});
-    $(".tanchuClose").hover(
-     function(){
-      $(this).css("color","#333");
-     },function(){
-      $(this).css("color","#666");
-     }
-    );
-    $(".tanchuClose").click(function(){
-     $(".winbj").remove();
-     $(".tanChu").remove();
-    });
-   }
-
-
-   function shijiantanchuceng(width,height,tit,url){
-    var winWinth = $(window).width(),winHeight = $(document).height();
-    $("body").append("<div class='winbj'></div>");
-    $("body").append("<div class='tanChu'><div class='tanChutit'><span class='tanchuTxt'>"+tit+"</span><span class='tanchuClose'>关闭</span></div><div class='vdiv'><form id='scsjform' method='post' enctype='multipart/form-data' action='"+url+"'>上传文件：<input  name='upfile' type='file'/><input id='chapterId' name='chapterId' type='hidden' value='1'><div class='quceshi' ><input type='submit' value='提交'></div></form></div></div>");
-    $(".winbj").css({width:winWinth,height:winHeight,background:"#000",position:"absolute",left:"0",top:"0"});
-    $(".winbj").fadeTo(0, 0.5);
-    var tanchuLeft = $(window).width()/2 - width/2;
-    var tanchuTop = $(window).height()/2 - height/2 + $(window).scrollTop();
-    $(".tanChu").css({width:width,height:height,border:"3px #ccc solid",left:tanchuLeft,top:tanchuTop,background:"#fff",position:"absolute"});
-    $(".tanChutit").css({width:width,height:"25px","border-bottom":"1px #ccc solid",background:"#eee","line-height":"25px"});
-    $(".tanchuTxt").css({"text-indent":"5px","float":"left","font-size":"14px"});
-    $(".tanchuClose").css({"width":"40px","float":"right","font-size":"12px","color":"#666","cursor":"pointer"});
-    var winIframeHeight = height - 26;
-    $(".winIframe").css({width:width,height:winIframeHeight,"border-bottom":"1px #ccc solid",background:"#ffffff"});
-    $(".tanchuClose").hover(
-     function(){
-      $(this).css("color","#333");
-     },function(){
-      $(this).css("color","#666");
-     }
-    );
-    $(".tanchuClose").click(function(){
-     $(".winbj").remove();
-     $(".tanChu").remove();
-    });
-    $("#scsja").click(function(){
-     $("#scsjform").submit();
-    });
-   }
-
-    $(".datino .vd").click(function(){
-        return false;
-    });
-
-    $(".dati .sc").click(function(){
-        if($(this).hasClass("scend")){
-          return false;
-        }
-        shijiantanchuceng(400,150,"上传实践",$(this).attr("post-url"));
-//        shijiantanchuceng(400,150,"上传实践",window.location.href);
-        return false;
-    });
-
-    var vdnum = 0;
-    var bofangTime=0;
-    $(".detlist li a").click(function(){
-      /*if( !$(this).parents("li").hasClass("on") ){
-        return false;
-      }*/
-      vdnum++;
-      var pvnum = $(this).parents("li").attr("data-num");
-      var tantit = $(".dettit em").text() + "--" + $(this).next().find("em").text();
-      tanchuceng(800,470,tantit,$(this).parents("li").attr("data-url"),$(this).parents("li").attr("data-type"),vdnum);
-      
-      var player = videojs('example_video_'+vdnum, { /* Options */ }, function() {
-    	  this.play();
-        
-        this.on('timeupdate', function () {  
-        	  bofangTime++;       	        	  
-        	
-        	});
-        
-        this.on('pause',function() {
-          $(".tanChu .quceshi").show();
-          bofangTime+="."+pvnum;
-            $.get("${ctx}/pauseSchedule.do?bofangP="+bofangTime,function(ret){
-              /*if(ret.retCode == "0000"){
-                  window.location.href = window.location.href;
-              }*/
-                //location.reload();
-              bofangTime=0;
-            });
-           
-        });
-          this.on('ended', function() {
-          $(".tanChu .quceshi").show();
-            $.get("${ctx}/pauseSchedule.do?bofangE="+bofangTime,function(ret){
-              /*if(ret.retCode == "0000"){
-                  window.location.href = window.location.href;
-              }*/
-                location.reload();
-            });
-        });
-      
-      });
-      return false;
-    });
-   })
-</script>
-
-		
-		
 	</head>
 	<body>
 <div class="main">
@@ -193,6 +70,114 @@
 
 
 	
+<script>
+    function tanchuceng(width,height,tit,url,type,num){
+	    var winWinth = $(window).width(),winHeight = $(document).height();
+	    $("body").append("<div class='winbj'></div>");
+	    $("body").append("<div class='tanChu'><div class='tanChutit'><span class='tanchuTxt'>"+tit+"</span><span class='tanchuClose'>关闭</span></div><div class='vdiv'><video id='example_video_"+num+"' class='video-js vjs-default-skin' controls preload='none' width='750' height='350'><source src='"+url+"' type='"+type+"' /></video></div><div class='quceshi' style='display:none'><a href='javascript:'>已看完</a></div></div>");
+	    $(".winbj").css({width:winWinth,height:winHeight,background:"#000",position:"absolute",left:"0",top:"0"});
+	    $(".winbj").fadeTo(0, 0.5);
+	    var tanchuLeft = $(window).width()/2 - width/2;
+	    var tanchuTop = $(window).height()/2 - height/2 + $(window).scrollTop();
+	    $(".tanChu").css({width:width,height:height,border:"3px #ccc solid",left:tanchuLeft,top:tanchuTop,background:"#fff",position:"absolute"});
+	    $(".tanChutit").css({width:width,height:"25px","border-bottom":"1px #ccc solid",background:"#eee","line-height":"25px"});
+	    $(".tanchuTxt").css({"text-indent":"5px","float":"left","font-size":"14px"});
+	    $(".tanchuClose").css({"width":"40px","float":"right","font-size":"12px","color":"#666","cursor":"pointer"});
+	    var winIframeHeight = height - 26;
+	    $(".winIframe").css({width:width,height:winIframeHeight,"border-bottom":"1px #ccc solid",background:"#ffffff"});
+	    $(".tanchuClose").hover(
+	     function(){
+	      $(this).css("color","#333");
+	     },function(){
+	      $(this).css("color","#666");
+	     }
+	    );
+	    $(".tanchuClose").click(function(){
+	     $(".winbj").remove();
+	     $(".tanChu").remove();
+	    });
+   }
+
+
+   function shijiantanchuceng(width,height,tit,url){
+    var winWinth = $(window).width(),winHeight = $(document).height();
+    $("body").append("<div class='winbj'></div>");
+    $("body").append("<div class='tanChu'><div class='tanChutit'><span class='tanchuTxt'>"+tit+"</span><span class='tanchuClose'>关闭</span></div><div class='vdiv'><form id='scsjform' method='post' enctype='multipart/form-data' action='"+url+"'>上传文件：<input  name='upfile' type='file'/><input id='chapterId' name='chapterId' type='hidden' value='1'><div class='quceshi' ><input type='submit' value='提交'></div></form></div></div>");
+    $(".winbj").css({width:winWinth,height:winHeight,background:"#000",position:"absolute",left:"0",top:"0"});
+    $(".winbj").fadeTo(0, 0.5);
+    var tanchuLeft = $(window).width()/2 - width/2;
+    var tanchuTop = $(window).height()/2 - height/2 + $(window).scrollTop();
+    $(".tanChu").css({width:width,height:height,border:"3px #ccc solid",left:tanchuLeft,top:tanchuTop,background:"#fff",position:"absolute"});
+    $(".tanChutit").css({width:width,height:"25px","border-bottom":"1px #ccc solid",background:"#eee","line-height":"25px"});
+    $(".tanchuTxt").css({"text-indent":"5px","float":"left","font-size":"14px"});
+    $(".tanchuClose").css({"width":"40px","float":"right","font-size":"12px","color":"#666","cursor":"pointer"});
+    var winIframeHeight = height - 26;
+    $(".winIframe").css({width:width,height:winIframeHeight,"border-bottom":"1px #ccc solid",background:"#ffffff"});
+    $(".tanchuClose").hover(
+     function(){
+      $(this).css("color","#333");
+     },function(){
+      $(this).css("color","#666");
+     }
+    );
+    $(".tanchuClose").click(function(){
+     $(".winbj").remove();
+     $(".tanChu").remove();
+    });
+    $("#scsja").click(function(){
+     $("#scsjform").submit();
+    });
+   }
+
+    $(".datino .vd").click(function(){
+        return false;
+    });
+
+    $(".dati .sc").click(function(){
+        if($(this).hasClass("scend")){
+          return false;
+        }
+        shijiantanchuceng(400,150,"上传实践",$(this).attr("post-url"));
+        return false;
+    });
+
+    var vdnum = 0;
+    var bofangTime=0;
+    $(".detlist li a").click(function(){
+
+      vdnum++;
+      var pvnum = $(this).parents("li").attr("data-num");
+      var tantit = $(".dettit em").text() + "--" + $(this).next().find("em").text();
+      tanchuceng(800,470,tantit,$(this).parents("li").attr("data-url"),$(this).parents("li").attr("data-type"),vdnum);
+      
+      var player = videojs('example_video_'+vdnum, { /* Options */ }, function() {
+    	  this.play();
+        
+        this.on('timeupdate', function () {  
+        	  bofangTime++;       	        	  
+        	
+        	});
+        
+        this.on('pause',function() {
+          $(".tanChu .quceshi").show();
+          bofangTime+="."+pvnum;
+            $.get("${ctx}/pauseSchedule.do?bofangP="+bofangTime,function(ret){
+              bofangTime=0;
+            });
+           
+        });
+          this.on('ended', function() {
+          $(".tanChu .quceshi").show();
+            $.get("${ctx}/pauseSchedule.do?bofangE="+bofangTime,function(ret){
+                location.reload();
+            });
+        });
+      
+      });
+      return false;
+    });
+   
+</script>
 	</body>
 </html>
 

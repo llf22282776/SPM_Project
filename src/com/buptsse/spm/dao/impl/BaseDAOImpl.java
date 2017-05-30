@@ -104,6 +104,7 @@ public class BaseDAOImpl<T> implements IBaseDAO<T> {
 		if (rows == null || rows < 1) {
 			rows = 10;
 		}
+		
 		Query q = this.getCurrentSession().createQuery(hql);
 		if (param != null && param.size() > 0) {
 			for (int i = 0; i < param.size(); i++) {

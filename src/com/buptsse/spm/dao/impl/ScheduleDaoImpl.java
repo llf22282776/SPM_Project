@@ -2,8 +2,10 @@ package com.buptsse.spm.dao.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
+import org.hibernate.SQLQuery;
 import org.springframework.stereotype.Repository;
 
 import com.buptsse.spm.dao.IScheduleDao;
@@ -107,5 +109,43 @@ public class ScheduleDaoImpl extends BaseDAOImpl<Schedule> implements IScheduleD
 		return super.get(Schedule.class, id);
 		
 	}
+	@Override
+	public List findWihtSql(String hql) {
+	    SQLQuery sqlQuery = super.getSessionFactory().getCurrentSession().createSQLQuery(hql);
+        List list = sqlQuery.list();
+        return list;
+    }
+    @Override
+    public List<Schedule> find(String hql, Schedule[] param) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public Schedule get(String hql, Schedule[] param) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public Long count(String hql, Schedule[] param) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public Integer executeHql(String hql, Schedule[] param) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public List findPage(String hql,List param , Integer page,Integer rows) {
+        // TODO Auto-generated method stub
+        System.out.println("开始底层分页查询，查询学生视频学习进度:");
+        return super.find(hql, param, page, rows);
+    }
+
+  
 
 }

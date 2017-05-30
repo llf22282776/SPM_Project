@@ -4,6 +4,7 @@
 package com.buptsse.spm.service;
 
 import java.util.List;
+import java.util.Map;
 
 import com.buptsse.spm.domain.Course;
 import com.buptsse.spm.domain.Schedule;
@@ -25,4 +26,5 @@ public interface IScheduleService {
 	public boolean saveOrUpdate(Schedule schedule);
 	public List<Schedule> findScheduleByUserIdAndStepOrder(Integer stepOrder,String userId);
 	public List<Schedule> findScheduleByUserIdAndChapterId(Integer chapterId,String userId);
+	public List findPage(Map param,Integer page, Integer rows) ;
 }

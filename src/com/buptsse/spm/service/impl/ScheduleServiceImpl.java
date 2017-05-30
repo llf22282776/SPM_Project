@@ -1,7 +1,9 @@
 package com.buptsse.spm.service.impl;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.transaction.Transactional;
@@ -105,6 +107,30 @@ public class ScheduleServiceImpl implements IScheduleService{
 	public void setiScheduleDao(IScheduleDao iScheduleDao) {
 		this.iScheduleDao = iScheduleDao;
 	}
+
+    @Override
+    public List findPage(Map param, Integer page, Integer rows) {
+        // TODO Auto-generated method stub
+     // TODO Auto-generated method stub
+        System.out.println("$$$$$$$$进入service**查询");
+        String hql = "SELECT * from Schedule WHERE 1=1";
+        List paramList = new ArrayList();
+        Iterator iter = param.keySet().iterator();
+        
+        while (iter.hasNext()){
+            String key = (String) iter.next();
+            String value = param.get(key)+"";
+            System.out.println("&&&&&value&&&&:"+value);
+            if(!"".equals(value) && !"-1".equals(value)){
+                hql+=" and "+key+"="+value;
+                paramList.add(value);               
+            } 
+        }       
+        
+        System.out.println("进入查询的Service:"+hql);
+        return iScheduleDao.findWihtSql(hql);
+        //return iSelectCourseDao.findAllCourse();
+    }
 
 
 
