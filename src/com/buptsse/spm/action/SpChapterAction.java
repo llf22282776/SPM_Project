@@ -8,9 +8,12 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.apache.poi.ss.formula.ptg.StringPtg;
 import org.apache.struts2.ServletActionContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+
 
 
 
@@ -146,7 +149,41 @@ public class SpChapterAction extends ActionSupport{
 		
 		} 
 	}	
-	
+	/**
+	 * 
+	 * 查询某个章节的名字列表
+	 * 
+	 * 
+	 * */
+	public String getSpchapterVideoList() {
+	    User user = (User)ServletActionContext.getRequest().getSession().getAttribute("user");
+        if(user == null || user.getPosition().equals(JspFitter.POSITION_ADMIN)){
+            return "error1";
+            
+        }
+	    int chapter_id_1;
+	    try {
+            chapter_id_1=Integer.parseInt(spChapterId);
+            
+            
+       } catch (Exception e) {
+           // TODO: handle exception
+           chapter_id_1=-1;
+       }
+	   List<SpChapterVideo> spChapter=spChapterVideoService.findSpChapterVideoByChapterId(chapter_id_1);
+	   Map<String,Object> map=new HashMap<String, Object>();
+	   map.put("size", spChapter.size());
+	   map.put("list", spChapter);
+	   String string=JSONObject.toJSONString(spChapter);
+	   try {
+        ServletActionContext.getResponse().getWriter().write(string);
+    } catch (IOException e) {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+    }
+	   return null;
+	   
+    }
 	
 	/**
 	 * 查询章节细节
@@ -212,21 +249,24 @@ public class SpChapterAction extends ActionSupport{
         paramMap.put("video_step_order", spChapterVideoId_1);
         paramMap.put("percent", percent_1);
         paramMap.put("userid", studentId);
-        List<Schedule> list = scheduleService.findPage(paramMap, page, rows);
+        List list1 = scheduleService.findPage(paramMap, page, rows);
+        List<Schedule> list=changeToSchedule(list1); 
         for(Schedule schedule:list){
-            Course course= selectCourseService.findCourse(studentId);
-            SpChapter spChapter=spChapterService.findSpChapterById(spChapterId);
-            SpChapterVideo  svideo=spChapterVideoService.findSpChapterVideoById(spChapterVideoId);
+            Course course= selectCourseService.findCourse(schedule.getUserid());
+            SpChapter spChapter=spChapterService.findSpChapterById(schedule.getChapter_id()+"");
+            SpChapterVideo  svideo=spChapterVideoService.findSpChapterVideoByStepOrder(schedule.getVideo_step_order()).get(0);
             if(course!=null){
                 schedule.setName(course.getName());
                 
             }
             if(spChapter!=null){
-                schedule.setVideoName(spChapter.getChapter_name());
+                System.out.println("章节名称:"+spChapter.getChapter_name());
+                schedule.setChapterName(spChapter.getChapter_name());
                 
             }
             if(svideo!=null){
-                schedule.setChapterName(svideo.getVideo_name());
+                System.out.println("小结名称:"+svideo.getVideo_name());
+                schedule.setVideoName(svideo.getVideo_name());
                 
             }
         }
@@ -246,7 +286,26 @@ public class SpChapterAction extends ActionSupport{
 
 	
 	
-	public ISpChapterService getSpChapterService() {
+	@SuppressWarnings("rawtypes")
+    private List<Schedule> changeToSchedule(List list) {
+        // TODO Auto-generated method stub
+	    List<Schedule> schedules=new ArrayList<Schedule>();
+	    for(Object obj:list){
+	        Object[] rawStrings=(Object[])obj;
+	        Schedule schedule=new Schedule();
+	        schedule.setChapter_id(Integer.parseInt(rawStrings[0].toString()) );
+	        schedule.setVideo_step_order(Integer.parseInt(rawStrings[1].toString()) );
+	        schedule.setPercent(Integer.parseInt(rawStrings[2].toString()) );
+	        schedule.setUserid(rawStrings[3].toString());
+	        schedules.add(schedule);
+	  }
+	    
+	    System.out.println("转换");
+        return schedules;
+    }
+
+
+    public ISpChapterService getSpChapterService() {
 		return spChapterService;
 	}
 

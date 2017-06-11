@@ -108,27 +108,30 @@ public class ScheduleServiceImpl implements IScheduleService{
 		this.iScheduleDao = iScheduleDao;
 	}
 
+    @SuppressWarnings("rawtypes")
     @Override
     public List findPage(Map param, Integer page, Integer rows) {
         // TODO Auto-generated method stub
      // TODO Auto-generated method stub
         System.out.println("$$$$$$$$进入service**查询");
-        String hql = "SELECT * from Schedule WHERE 1=1";
+        String hql = "SELECT * from Schedule where";
         List paramList = new ArrayList();
         Iterator iter = param.keySet().iterator();
-        
+        int index=0;
         while (iter.hasNext()){
             String key = (String) iter.next();
             String value = param.get(key)+"";
             System.out.println("&&&&&value&&&&:"+value);
             if(!"".equals(value) && !"-1".equals(value)){
-                hql+=" and "+key+"="+value;
+              if(index==0)  {hql+="  "+key+" = "+value;index++;}
+              else hql+=" and "+key+" = "+value;
                 paramList.add(value);               
             } 
         }       
         
         System.out.println("进入查询的Service:"+hql);
-        return iScheduleDao.findWihtSql(hql);
+        List list=iScheduleDao.findWihtSql(hql);
+        return list;
         //return iSelectCourseDao.findAllCourse();
     }
 

@@ -33,7 +33,8 @@ public class SpChapterServiceImpl implements ISpChapterService{
 	@Override
 	public SpChapter findSpChapterById(String id) {
 		// TODO Auto-generated method stub
-		return iSpChapterDao.findSpChapterById(new Integer(id));
+	    Integer integer=new Integer(id); 
+		return iSpChapterDao.findSpChapterById(integer);
 	}
 
 	@Override

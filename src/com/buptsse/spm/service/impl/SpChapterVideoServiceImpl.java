@@ -47,9 +47,9 @@ public class SpChapterVideoServiceImpl implements ISpChapterVideoService{
 	
 	
 	public List<SpChapterVideo> findSpChapterVideoByStepOrder(Integer stepOrder){
-		String hql = "from SpChapterVideo where video_step_order=? ";
+		String hql = "from SpChapterVideo where id=? ";
 		List listParam = new ArrayList();
-		listParam.add(stepOrder);
+		listParam.add(stepOrder+"");
 		
 		return iSpChapterVideoDao.findSpChapterVideo(hql, listParam);
 	}	

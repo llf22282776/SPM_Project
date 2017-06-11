@@ -111,9 +111,18 @@ public class ScheduleDaoImpl extends BaseDAOImpl<Schedule> implements IScheduleD
 	}
 	@Override
 	public List findWihtSql(String hql) {
-	    SQLQuery sqlQuery = super.getSessionFactory().getCurrentSession().createSQLQuery(hql);
-        List list = sqlQuery.list();
-        return list;
+	    try {
+	        SQLQuery sqlQuery = super.getSessionFactory().getCurrentSession().createSQLQuery(hql);
+	        List list = sqlQuery.list();
+	        System.out.println("list.size!!:"+list.size());
+	        return list;
+        } catch (Exception e) {
+            // TODO: handle exception
+            e.printStackTrace();
+            List list = new ArrayList<Schedule>();
+            return list;
+        }
+	   
     }
     @Override
     public List<Schedule> find(String hql, Schedule[] param) {

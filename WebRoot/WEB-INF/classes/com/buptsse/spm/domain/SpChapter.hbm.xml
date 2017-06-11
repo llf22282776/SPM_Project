@@ -10,7 +10,7 @@
 		<property name="chapter_name_number" column="chapter_name_number" 
 			type="integer" />
 		<property name="chapter_name" column="chapter_name" 
-			type="integer" />
+			type="string" />
 		<property name="chapter_desc" column="chapter_desc" 
 			type="string" />
 		<property name="chapter_pic" column="chapter_pic" 
