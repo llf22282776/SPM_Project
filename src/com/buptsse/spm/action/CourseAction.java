@@ -233,10 +233,10 @@ public class CourseAction extends ActionSupport{
 	            if(flag){
 	                
 	                map.put("code", "1");
-	                map.put("message", "选课成功！");
+	                map.put("message", "已成功申请！");
 	            }else{
 	                map.put("code", "2");
-	                map.put("message", "选课失败，请联系管理员！");
+	                map.put("message", "选课申请失败，请联系管理员！");
 	            }           
 		        
 		    }else {

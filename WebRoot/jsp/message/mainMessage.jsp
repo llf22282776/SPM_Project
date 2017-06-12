@@ -78,7 +78,8 @@ function submitMessage(){
 	</iframe> 
 	
 
-		<div class="article">
+		<c:if test="${session.user.position != '1'}">
+			<div class="article">
 			<h1>
 				我要留言
 			</h1>
@@ -106,6 +107,8 @@ function submitMessage(){
 				</div>
 			</form>
 		</div>	
+		
+		</c:if>
 
 	</body>
 </html>
