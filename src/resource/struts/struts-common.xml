@@ -117,7 +117,7 @@
 			<result name="error">error/error.jsp</result>
 		</action>
 
-		<!-- 保存留言 -->
+		<!-- 删除留言 -->
 		<action name="deleteMessage" method="deleteMessage" class="messageAction">
 			<result name="success"></result>
 			<result name="error">error/error.jsp</result>

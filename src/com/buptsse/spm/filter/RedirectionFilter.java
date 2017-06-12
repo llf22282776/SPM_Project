@@ -1,7 +1,10 @@
 package com.buptsse.spm.filter;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -14,10 +17,60 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.buptsse.spm.domain.User;
+import com.buptsse.spm.util.DwrUtil;
 import com.opensymphony.xwork2.ActionContext;
 
 public class RedirectionFilter implements Filter{
-
+    public static Map<String, String> map=new HashMap<String, String>(){{
+        put("loginAction","");
+        put("logOut","");
+        put("registerAction","");
+        put("insertStudents","");
+        put("indexAction","");
+        put("listUser","");
+        put("deleteUser","");
+        put("insertUser","");
+        put("courseQuery","");
+        put("courseUpdate","");
+        put("insertCourse","");
+        put("updateOneStudent","");
+        put("emailNotify","");
+        put("uploadScoreFile","");
+        put("findMessageList","");
+        put("saveMessage","");
+        put("deleteMessage","");
+        put("listExam","");
+        put("addQuestion","");
+        put("queryQuestion","");
+        put("enterExam","");
+        put("checkAnswer","");
+        
+        put("deleteExam","");
+        put("deleteQuestion","");
+        put("findTradeInfoList","");
+        put("findTradeInfo","");
+        put("enterIndex","");
+        put("listDownLoad","");
+        
+        put("addDownload","");
+        put("deleteDownload","");
+        put("enterintro","");
+        put("editBasicInfo","");
+        put("updateBasicInfo","");
+        
+        put("listTeachingPlan","");
+        put("deleteTeaching","");
+        put("addTeaching","");
+        put("listSpChapter","");
+        put("videoShow","");
+        put("getSpchapterVideo","");
+        put("pauseSchedule","");
+        put("scheduleCheck","");
+        put("listConfigInfo","");
+        put("editConfigInfo","");
+        
+    }};
+    private Pattern doRegex = Pattern.compile("/\\\\*.*?\\\\.do");
     @Override
     public void destroy() {
         // TODO Auto-generated method stub
@@ -51,7 +104,7 @@ public class RedirectionFilter implements Filter{
               }
               else   {
                   
-                  if(!response.isCommitted())response.sendRedirect(rootUrlString);//}
+                  if(!response.isCommitted())response.sendRedirect(rootUrlString+"/error/authError.jsp");//}
                   return;
               }
               
@@ -96,7 +149,18 @@ public class RedirectionFilter implements Filter{
           
           
           User thisUser=(User) session.getAttribute("user");
-          
+        
+          String oString=requestURI.substring(requestURI.lastIndexOf("/")+1);
+          String dString=oString.substring(0, oString.indexOf("."));
+          System.out.println("该action是:"+dString);
+          if(!map.containsKey(dString)){
+              //不包含该action
+              System.out.println(oString+"非法！");
+              response.sendRedirect(rootUrlString+"/error/authError.jsp");
+              return;
+              
+              
+          }
           if(thisUser.getPosition().equals(JspFitter.POSITION_STUDENT)){
               //学生身份
               
@@ -127,55 +191,7 @@ public class RedirectionFilter implements Filter{
        
       }
       
-/*      
-    //      
-    //       if( (session.getAttribute("user") == null) && 
-    //               (request.getRequestURI().endsWith("/loginAction.do") == false)  
-    //               && 
-    //               (request.getRequestURI().endsWith("/LogOut.do")==false ) 
-    //               &&
-    //               (request.getRequestURI().endsWith("/registerAction.do")==false ) 
-    //
-    //               ){
-    //           //不是登陆，登出，注册 且 没有user
-    //           //看看是不是个游客，是个游客也别重定向了
-    //           //妈的，搞毛线，在action里面做个毛线的权限控制
-    //           if(session.getAttribute("common")!=null ){
-    //               //有这个字段,分析分析有哪些能够重定向的，暂时先不做处理,也不冲定向
-    //               chain.doFilter(req, res);
-    //               return ;
-    //           }
-    //           
-    //           
-    //           System.out.println("正在重定向!!!");
-    //           System.out.println((request.getRequestURI().endsWith("/loginAction.do")));
-    //           System.out.println((request.getRequestURI().endsWith("/logOut.do")) );
-    //           response.sendRedirect(rootUrlString);
-    //           return;
-    //           
-    //       }else{ 
-    //           //可能是 登陆登出 注册中的一个或者 user 不是null
-    //           if(session.getAttribute("user") != null){
-    //               session.removeAttribute("common");//移除游客}
-    //               //然后如果是
-    //               if(request.getRequestURI().endsWith("/loginAction.do")){
-    //                   //又想登陆了
-    //                   response.sendRedirect(rootUrlString+"/jsp/mainFrame.jsp");
-    //                   return;
-    //               }else if(request.getRequestURI().endsWith("/SPM_Project") || request.getRequestURI().endsWith("/SPM_Project/")){
-    //                   response.sendRedirect(rootUrlString+"/jsp/mainFrame.jsp");
-    //                   return;
-    //                   
-    //                   
-    //               }
-    //           }
-    //           
-    //           //进行接下来处理
-    //           chain.doFilter(req, res);
-    //          
-    //       }
-        
- */  
+
         
     }
 

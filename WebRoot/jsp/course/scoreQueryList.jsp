@@ -357,6 +357,9 @@
 <div  id="dlg" class="easyui-dialog"  style="padding:10px 20px;width: 700px" closed="true" buttons="#dlg-buttons" >   
  <form id="fileUpload" method="post" enctype="multipart/form-data">
 	  <table style="border-collapse:collapse ;"  width="600px" height="50px" cellspacing="5" cellpadding="5"> 
+	  	<tr>
+	  		表头:序号 学号 年份 姓名 班级 平时成绩 期中成绩 期末成绩 试验成绩 邮箱 电话
+	  	</tr>
 	 	<tr>
 		 	<td  width="150px" align="right"  ><label for="fileName" >成绩文件选择:</label> </td>
 		 	<td   width="200px" align="left" ><input class="easyui-filebox"  id="file" name="file" buttonText="选择文件"  accept=".xlsx,.xls" style="width:300px; height: 26px"> </td>

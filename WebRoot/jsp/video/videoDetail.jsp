@@ -32,7 +32,7 @@
 		      <tbody>
                     <tr>
 						<td>
-              <div class="dettit" ><em>${spChapterName}</em>--共${videoSize}集</div>
+              <div class="dettit" >${spChapterName}--共${videoSize}集</div>
               
  				<s:iterator value="spChapterVideoList" status="status"  var="spChapterVideo">             
 							<ul class="detlist">
@@ -42,7 +42,7 @@
                                     </a>
                                     <div>
        
-                                        <em>${ spChapterVideo.video_name_number} &nbsp;&nbsp;${ spChapterVideo.video_name}</em>
+                                        ${ spChapterVideo.video_name_number} &nbsp;&nbsp;${ spChapterVideo.video_name}
                                     </div>
                                     <div>时长：${ spChapterVideo.video_time}分钟</div>
                                     <p>视频介绍：${ spChapterVideo.video_desc}</p>

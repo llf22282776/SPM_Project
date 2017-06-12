@@ -19,20 +19,20 @@
 						您还没有登陆，请先<div style="color: #2200aa" id="login" onclick="justLogin();">登陆</div>
 					</c:when>
 					<c:otherwise>
-						您的身份是游客,无权查看此功能,请先<div style="color: #2200aa" id="justLogout();">登陆</div>
+						您的身份是游客,无权查看此功能,请先<div style="color: #2200aa" onclick="justLogout();">登陆</div>
 					</c:otherwise>
 				</c:choose>
 			</c:when>
 			<c:otherwise>
 				<c:choose>
 					<c:when test="${session.user.position eq '2'}">
-						您是的身份是 教师 ，无权进行此项操作,请登出切换账号
+						您是的身份是 教师 ，无权进行此项操作,请登出切换账号,<div style="color: #2200aa" onclick="justLogout();">登出</div>
 					</c:when>
 					<c:when test="${session.user.position eq '1'}">
-						您是的身份是 管理员 ，无权进行此项操作,请登出切换账号
+						您是的身份是 管理员 ，无权进行此项操作,请登出切换账号,<div style="color: #2200aa" onclick="justLogout();">登出</div>
 					</c:when>
 					<c:when test="${session.user.position eq '3'}">
-						您是的身份是 学生，无权进行此项操作,请登出切换账号
+						您是的身份是 学生，无权进行此项操作,请登出切换账号,<div style="color: #2200aa" onclick="justLogout();">登出</div>
 					</c:when>
 					<c:otherwise>
 						您是的身份是 未知 ，无权进行此项操作,请登出切换账号
@@ -46,9 +46,9 @@
 	 function justLogin () {
 		//如果有父窗口，让父窗口进行这个工作
 		if (parent != null && parent != undefined)
-			parent.window.location.href = "${pageContext.request.contextPath}/login.do";
+			parent.window.location.href = "${pageContext.request.contextPath}/loginAction.do";
 		else
-			location.href = "${ctx}/login.do";
+			location.href = "${pageContext.request.contextPath}/loginAction.do";
 
 	};
 	 function justLogout() {
@@ -56,7 +56,7 @@
 		if (parent != null && parent != undefined)
 			parent.window.location.href = "${pageContext.request.contextPath}/logOut.do";
 		else
-			location.href = "${ctx}/logOut.do";
+			location.href = "${pageContext.request.contextPath}/logOut.do";
 
 	};
 </script>
