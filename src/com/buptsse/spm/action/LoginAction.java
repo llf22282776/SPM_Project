@@ -48,7 +48,7 @@ public class LoginAction extends ActionSupport
 		    }
 			User tempuser = new User();
 			//这里有Bug,找到没找到呢？？？、ok
-			if(user.getUserId() == null || user.getPassword() == null){
+			if(user==null || user.getUserId() == null || user.getPassword() == null){
 			    //只要有一个等于null，就返回error
 			    return "error";
 			}

@@ -36,12 +36,15 @@ function optionChange(){
 		success:function(result){
 			var res=JSON.parse(result);
 			var list=[];
+			var choos=-1;
 			for(var i=0;i<res.length;i++){
+				if(i==0)choos=res[i].id;
 				list.push({id:res[i].id,video_name:res[i].video_name});
 				
 			}
 			$("#spChapterVideoId").combobox('clear');
 			$("#spChapterVideoId").combobox('loadData',list);
+			if(choos!=-1)$("#spChapterVideoId").combobox('select',choos);
 		},
 		error:function(){
 			swal("提示","无法显示小节内容","warning");
@@ -78,6 +81,7 @@ function optionChange(){
 	    			<s:iterator value="chapterList" status="status"  var="spChapter">             
 						<option value="${spChapter[0]}">${spChapter[2]}</option>  
 					</s:iterator>
+					
 	    	</select>
 	    	</td> 
 	    	<td width="15%">
