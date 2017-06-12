@@ -68,6 +68,7 @@ public class RedirectionFilter implements Filter{
         put("scheduleCheck","");
         put("listConfigInfo","");
         put("editConfigInfo","");
+        put("uploadExamFile","");
         
     }};
     private Pattern doRegex = Pattern.compile("/\\\\*.*?\\\\.do");

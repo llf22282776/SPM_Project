@@ -328,7 +328,11 @@
 			<result name="success"></result>
 			<result name="error">error/error.jsp</result>
 		</action>
-
+		<!-- 上传试卷文件 -->
+		<action name="uploadExamFile" method="uploadExamFile" class="examAction">
+			<result name="success"></result>
+			<result name="error">error/error.jsp</result>
+		</action>
 	</package>
 
 </struts>

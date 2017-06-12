@@ -1,6 +1,10 @@
 package com.buptsse.spm.action;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -8,6 +12,12 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.apache.struts2.ServletActionContext;
 import org.directwebremoting.WebContextFactory;
 import org.slf4j.Logger;
@@ -16,9 +26,19 @@ import org.slf4j.LoggerFactory;
 
 
 
+
+
+
+
+
+
 import com.alibaba.fastjson.JSONObject;
+import com.buptsse.spm.domain.Course;
 import com.buptsse.spm.domain.Exam;
+import com.buptsse.spm.domain.User;
 import com.buptsse.spm.service.IExamService;
+import com.buptsse.spm.util.ConstantUtil;
+import com.mysql.jdbc.StringUtils;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
 
@@ -42,7 +62,44 @@ public class ExamAction extends ActionSupport{
 	String[] result=new String[10];
 	int rightNumber=0 ;
 	int score=0;
+	public static final String[] headers=new String[]{
+        "试卷标题",
+        "题目内容",
+        "选项A",
+        "选项B",
+        "选项C",
+        "选项D",
+        "正确选项",
+    }; 
+	  // 上传文件集合
+    private List<File> file;
+    // 上传文件名集合
+    private List<String> fileFileName;
+    // 上传文件内容类型集合
+    private List<String> fileContentType;
+    public List<File> getFile() {
+        return file;
+    }
 
+    public void setFile(List<File> file) {
+        this.file = file;
+    }
+
+    public List<String> getFileFileName() {
+        return fileFileName;
+    }
+
+    public void setFileFileName(List<String> fileFileName) {
+        this.fileFileName = fileFileName;
+    }
+
+    public List<String> getFileContentType() {
+        return fileContentType;
+    }
+
+    public void setFileContentType(List<String> fileContentType) {
+        this.fileContentType = fileContentType;
+    }
 	/**
 	 * 查询所有网上测试列表
 	 * @return
@@ -194,6 +251,53 @@ public class ExamAction extends ActionSupport{
 		return null;
 	}		
 	
+	/**
+	 * 
+	 * 上传成绩文件
+	 * 
+	 * */
+	public String uploadExamFile(){
+	    Map sessionMap=ActionContext.getContext().getSession();
+        User user=(User) sessionMap.get("user");
+        StringBuffer str=new StringBuffer();
+        if(user == null || user.getPosition().equals(ConstantUtil.POSITION_TEACHER) == false){
+            str.append("您无权进行此操作");
+        }
+        else 
+         for(int i=0;i<file.size();i++){
+             File thisFile=file.get(i);
+             Workbook workbook=getExeclObject(thisFile);
+             if(workbook ==null)str.append("文件"+(i+1)+"出错"+"\n");
+             else {
+                 int nums=workbook.getNumberOfSheets();
+                 if(nums == 0)str.append("文件"+(i+1)+"没有工作表\n");
+                 else for(int j=0;j<nums;j++){
+                     
+                     Sheet sheet=workbook.getSheetAt(j);
+                     if(isHeaderleagal(sheet) == false)str.append("文件"+(i+1)+"的第"+(j+1)+"个工作表不合法\n");
+                     else {
+                         List<Integer> failRows= dealSheet(sheet);
+                         if(failRows.size() !=0){
+                             str.append("文件"+(i+1)+"的第"+(j+1)+"个工作表以下行添加失败\n");
+                             for(int k=0;k<failRows.size();k++){
+                                 str.append(failRows.get(k)+"\n");
+                             }
+                         }
+                     }
+                 }
+             }
+         }
+        if(str.length()<1)str.append("批量录入成功!");
+         try {
+            ServletActionContext.getResponse().getWriter().write(str.toString());
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        
+        return null;
+	}
 	
 	public IExamService getExamService() {
 		return examService;
@@ -264,6 +368,131 @@ public class ExamAction extends ActionSupport{
 	public void setNumber(String number) {
 		this.number = number;
 	}	
+	  /**
+     * 
+     * 获得表格对象
+     * 
+     * */
+    private Workbook getExeclObject(File file){
+        try {
+           
+            
+            Workbook wb = null;
+
+            try {
+                 wb = new XSSFWorkbook(new FileInputStream(file));
+              } catch (Exception ex) {
+                  wb = new HSSFWorkbook(new FileInputStream(file));
+              }
+            return wb;
+        } catch (FileNotFoundException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            return null;
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            return null;
+        }
+        
+        
+        
+    }
+    
+    /**
+     * 判断表头是否合法
+     * 
+     * 
+     * */
+    private boolean isHeaderleagal(Sheet sheet){
+        try {
+            int firstLine=sheet.getFirstRowNum();
+            int lastLine=sheet.getLastRowNum();
+            System.out.println("firstLine:"+firstLine+" lastLine:"+lastLine);
+            if(firstLine == lastLine )return false; //行数不对,没有
+            
+            Row row = sheet.getRow(firstLine); //取第一行
+            int firstColNum=row.getFirstCellNum();
+            int lastColNum=row.getLastCellNum();
+            //问题：为什么列要多一个，行就正确
+            if(firstColNum == lastColNum || (lastColNum-firstColNum)!= (headers.length) )return false; //列数不对
+            System.out.println("firstColNum:"+firstColNum+" lastColNum:"+lastColNum);
+           
+            
+            for(int i=firstColNum,j=0;i< lastColNum;i++,j++){
+                Cell cell=row.getCell(i);
+
+                String value= cell.getStringCellValue();
+                System.out.println("value:"+value+" "+" headers[j]:"+headers[j]+(value.equals(headers[j])));
+                if(!value.equals(headers[j]))//不等于预设的值
+                    return false;
+            }
+           
+        } catch (Exception e) {
+            // TODO: handle exception
+            return false;
+        }
+     
+        
+        return true;
+    }
+    /**
+     * 获得一个exam对象，成功返回对象
+     *失败返回null
+     * 
+     * 
+     * */
+    private Exam toStudentUser(Row row){
+        Exam exam=new Exam();
+        try {
+            
+            exam.setExamName(getStringFromCell(row.getCell(0)));
+            exam.setNumber(examService.findExamMaxId(exam.getExamName()));
+            exam.setQuestion(getStringFromCell(row.getCell(1)));
+            exam.setAnswerA(getStringFromCell(row.getCell(2)));
+            exam.setAnswerB(getStringFromCell(row.getCell(3)));
+            exam.setAnswerC(getStringFromCell(row.getCell(4)));
+            exam.setAnswerD(getStringFromCell(row.getCell(5)));
+            exam.setAnswerRight(getStringFromCell(row.getCell(6)));
+        } catch (Exception e) {
+            // TODO: handle exception
+            System.out.println(e.getMessage());
+            return null;
+        }
+        return exam;
+    }
+    /**
+     * 
+     * 获得一个工作表的插入试卷，和失败编号
+     * 
+     * */
+    private List<Integer>  dealSheet(Sheet sheet){
+        List<Integer> failRows=new ArrayList<Integer>();
+        int firstLine=sheet.getFirstRowNum();
+        int lastLine=sheet.getLastRowNum();
+        System.out.println("dealSheet-- firstLine:"+firstLine+" lastLine:"+lastLine);
+        for(int i=firstLine+1;i<=lastLine;i++){
+            Row row=sheet.getRow(i);
+            Exam thisuser=toStudentUser(row);
+            System.out.println("thisuser == null:"+(thisuser == null));
+            if(thisuser == null)failRows.add(new Integer(i));
+            else {
+               if( !thisuser.getExamName().equals("") && !thisuser.getQuestion().equals("") )examService.saveOrUpdate(thisuser);
+               else failRows.add(new Integer(i));
+            }
+        }
+        return failRows;
+        
+    }
+    
+    private String  getStringFromCell(Cell cell) {
+        if(cell.getCellType() ==Cell.CELL_TYPE_STRING)return cell.getStringCellValue();
+        if(cell.getCellType() ==Cell.CELL_TYPE_NUMERIC)return  (int)cell.getNumericCellValue()+"";
+        if(cell.getCellType() ==Cell.CELL_TYPE_BOOLEAN)return cell.getBooleanCellValue()+"";
+        if(cell.getCellType() ==Cell.CELL_TYPE_BLANK)return "";
+        return "";
+        
+    }
 	
 	
 }

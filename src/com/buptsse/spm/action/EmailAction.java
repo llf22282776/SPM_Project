@@ -1,5 +1,6 @@
 package com.buptsse.spm.action;
 
+import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -56,7 +57,9 @@ public class EmailAction extends ActionSupport {
     public String subject = "test"; // 邮件主题
     public String content = "sdf"; // 邮件内容
     public String smtpStyle; // 邮箱的smtp类型
+  
 
+  
     public String msg = "";
 
     // 设置smtp的类型
